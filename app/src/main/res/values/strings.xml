@@ -40,5 +40,13 @@
     <string name="msg_error_inputs">You Have some errors in your inputs!</string>
     <string name="msg_error_wrong_code">Wrong code!</string>
 
+    <!--  options of spinner  -->
+    <string-array name="sort_options">
+        <item>Date</item>
+        <item>Product name</item>
+        <item>Impact environnemental</item>
+    </string-array>
+
+
 
 </resources>
