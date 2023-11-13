@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import tn.esprit.ecoshope.databinding.FragmentPostBinding
 import tn.esprit.ecoshope.model.Post
+import tn.esprit.ecoshope.model.Comment
+
 import tn.esprit.ecoshope.ui.adapter.PostAdapter
 
 class PostFragment: Fragment() {
@@ -24,9 +26,17 @@ class PostFragment: Fragment() {
 
 
     private fun getListPost() : MutableList<Post> {
+
+        val comments = listOf(
+            Comment("1", "User1", "Great post!", "2023-11-12"),
+            Comment("2", "User2", "Nice content", "2023-11-13")
+        )
+
+        // Sample likes
+        val likes = listOf("User3", "User4")
         return mutableListOf(
-            Post("hassen mrakben","don't buy this product is dangers for arabe people "),
-            Post("badis aloui","don't buy this product is dangers for people ")
+            Post("",  "hassen mrakben","don't buy this product is dangers for arabe people ","10/10/10", comments,likes),
+            Post("",  "badis aloui","don't buy this product is dangers for arabe people ","10/10/10", comments,likes)
 
         )
 

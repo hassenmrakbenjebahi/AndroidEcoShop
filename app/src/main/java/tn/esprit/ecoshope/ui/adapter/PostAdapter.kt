@@ -16,8 +16,8 @@ class PostAdapter (val postlist:MutableList<Post>) :RecyclerView.Adapter<PostAda
     override fun onBindViewHolder(holder: PostHolder, position: Int) {
         with(holder){
             with(postlist[position]){
-                binding.blogUserName.text=username
-                binding.blogDescription.text=description
+                binding.blogUserName.text=author
+                binding.blogDescription.text=content
             }
         }
     }
