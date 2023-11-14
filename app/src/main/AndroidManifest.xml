@@ -3,19 +3,47 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
-        android:usesCleartextTraffic="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EcoShope"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.profile.AboutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.PasswordActivity"
+            android:exported="false"
+            android:label="@string/title_activity_password"
+            android:theme="@style/Theme.EcoShope" />
+        <activity
+            android:name=".ui.profile.PersonalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.forgetpassword.CodeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.forgetpassword.Reset_Password_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.forgetpassword.PhoneActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.Home.RegisterActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.Home.HomeActivity"
             android:exported="false" />
