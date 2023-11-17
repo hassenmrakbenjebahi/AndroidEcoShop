@@ -8,19 +8,20 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 
 import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
-
+import tn.esprit.ecoshope.MainActivity
+import tn.esprit.ecoshope.R
 
 
 import tn.esprit.ecoshope.databinding.ActivityPhoneBinding
 
-import tn.esprit.ecoshope.util.retrofitUser.Api
 import tn.esprit.ecoshope.util.retrofitUser.ApiResponse
+import tn.esprit.ecoshope.util.ClientObject
 
 
 class PhoneActivity : AppCompatActivity() {
@@ -35,6 +36,15 @@ class PhoneActivity : AppCompatActivity() {
 
         binding = ActivityPhoneBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.back.setOnClickListener {
+            startActivity(Intent(this,MainActivity::class.java))
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setView(R.layout.loading_item) // Créez un layout XML avec une ProgressBar dedans
+            .setCancelable(false) // Empêche la fermeture du dialog lors de l'appui sur l'écran
+            .create()
+
+
 
 
 
@@ -53,7 +63,8 @@ class PhoneActivity : AppCompatActivity() {
             }
         })
         binding.buttonsub.setOnClickListener {
-            val apiInterface = Api.create()
+            dialog.show()
+            val apiInterface = ClientObject.create()
 
             val phone = binding.textphone.text.toString().trim()
 
@@ -63,9 +74,11 @@ class PhoneActivity : AppCompatActivity() {
                     Snackbar.LENGTH_LONG)
                     .show()
             }
+
             apiInterface.forgetpassword(phone)
                 .enqueue(object :Callback<ApiResponse>{
                     override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                        dialog.dismiss()
                         if (response.isSuccessful){
                             jwtToken = response.body()!!.token
                             Toast.makeText(

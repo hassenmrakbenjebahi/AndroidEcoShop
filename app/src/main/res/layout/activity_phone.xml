@@ -4,13 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#33000000"
     tools:context=".ui.forgetpassword.PhoneActivity">
 
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+
+        android:layout_marginTop="16dp"
+        android:src="@drawable/outline_arrow_back_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.109"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/textView16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="68dp"
         android:text="Forget Password"
         android:textSize="35sp"
         android:textStyle="italic"
@@ -24,15 +37,15 @@
         android:id="@+id/textView4"
         android:layout_width="349dp"
         android:layout_height="59dp"
+        android:text="@string/txt_forgot_password_desc"
         android:textSize="20sp"
         android:textStyle="italic"
-        android:text="@string/txt_forgot_password_desc"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.484"
+        app:layout_constraintHorizontal_bias="0.677"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.133" />
+        app:layout_constraintVertical_bias="0.187" />
 
     <EditText
         android:id="@+id/textphone"
@@ -53,9 +66,9 @@
         android:id="@+id/buttonsub"
         android:layout_width="330sp"
         android:layout_height="50sp"
-        android:backgroundTint="#33000000"
+        android:backgroundTint="@color/rose"
         android:layout_marginTop="80dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="15sp"
         android:text="Submit"
         app:layout_constraintEnd_toEndOf="parent"

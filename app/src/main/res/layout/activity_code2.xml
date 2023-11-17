@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#33000000"
     tools:context=".ui.forgetpassword.CodeActivity">
 
     <androidx.cardview.widget.CardView
@@ -128,7 +129,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20sp"
                 android:layout_marginBottom="20sp"
-                android:background="@drawable/round_back_100"
+                android:background="@color/rose"
                 android:paddingStart="30sp"
                 android:paddingEnd="30sp"
                 android:text="Verify OTP"

@@ -51,7 +51,6 @@
                     android:layout_width="134dp"
                     android:layout_height="108dp"
                     android:layout_marginTop="32dp"
-                    android:src="@drawable/outline_camera_alt_24"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -63,7 +62,7 @@
                     android:layout_marginTop="16sp"
                     android:text="bilel yousfi"
                     android:textColor="@color/white"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/iamge_profile"
                     app:layout_constraintHorizontal_bias="0.495"
@@ -76,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:text="bilelyousfi@gmail.com"
                     android:textColor="@color/white"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/name_profile"
                     app:layout_constraintStart_toStartOf="@+id/name_profile"
@@ -375,6 +374,7 @@
                                 android:orientation="vertical">
 
                                 <androidx.constraintlayout.widget.ConstraintLayout
+
                                     android:layout_width="100sp"
                                     android:layout_height="100sp"
                                     android:layout_margin="10sp"
@@ -382,7 +382,7 @@
 
 
                                     <ImageView
-                                        android:id="@+id/imageView10"
+                                        android:id="@+id/logout"
                                         android:layout_width="66dp"
                                         android:layout_height="61dp"
                                         android:src="@drawable/circle_green"

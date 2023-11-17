@@ -5,17 +5,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import tn.esprit.ecoshope.MainActivity
+import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.ActivityResetPasswordBinding
-import tn.esprit.ecoshope.model.user.User
-import tn.esprit.ecoshope.util.retrofitUser.Api
 import tn.esprit.ecoshope.util.retrofitUser.ApiResponse
+import tn.esprit.ecoshope.util.ClientObject
 
 
 class Reset_Password_Activity : AppCompatActivity() {
@@ -27,15 +26,20 @@ class Reset_Password_Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityResetPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val dialog = AlertDialog.Builder(this)
+            .setView(R.layout.loading_item) // Créez un layout XML avec une ProgressBar dedans
+            .setCancelable(false) // Empêche la fermeture du dialog lors de l'appui sur l'écran
+            .create()
 
         jwtToken4= intent.getStringExtra("JWT_TOKEN2")
 
 
 
         binding.subBtn.setOnClickListener {
-            val apiInterface = Api.create()
+            val apiInterface = ClientObject.create()
             val pass = binding.passwordd.text.toString().trim()
             val cpass = binding.confirmpassword.text.toString().trim()
+            dialog.show()
 
 
 
@@ -61,9 +65,11 @@ class Reset_Password_Activity : AppCompatActivity() {
                 binding.confpass.error="Must be the same password"
                 return@setOnClickListener
             }
+
             apiInterface.resetpassword("$jwtToken4",pass,cpass)
                 .enqueue(object :Callback<ApiResponse>{
                     override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                        dialog.dismiss()
                         if (response.isSuccessful){
                             Toast.makeText(
                                 this@Reset_Password_Activity,

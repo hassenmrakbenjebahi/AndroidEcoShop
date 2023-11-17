@@ -14,8 +14,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.ActivityCode2Binding
-import tn.esprit.ecoshope.util.retrofitUser.Api
 import tn.esprit.ecoshope.util.retrofitUser.ApiResponse
+import tn.esprit.ecoshope.util.ClientObject
 
 class CodeActivity : AppCompatActivity() {
     private var countdownTimer: CountDownTimer? = null
@@ -37,7 +37,7 @@ class CodeActivity : AppCompatActivity() {
             startCountdown()
         }
         binding.verifyBtn.setOnClickListener {
-            val apiInterface = Api.create()
+            val apiInterface = ClientObject.create()
             val otp1 = binding.otpET1.text.toString()
             val otp2 = binding.otpET2.text.toString()
             val otp3 = binding.otpET3.text.toString()

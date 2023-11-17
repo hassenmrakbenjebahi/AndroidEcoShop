@@ -12,17 +12,17 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
 import okhttp3.MultipartBody
 import retrofit2.Call
 import tn.esprit.ecoshope.MainActivity
 import tn.esprit.ecoshope.R
-import tn.esprit.ecoshope.databinding.ActivityMainBinding
 import tn.esprit.ecoshope.databinding.ActivityRegisterBinding
 import tn.esprit.ecoshope.model.user.User
-import tn.esprit.ecoshope.util.retrofitUser.Api
 import retrofit2.Callback
 import retrofit2.Response
+import tn.esprit.ecoshope.util.ClientObject
 
 class RegisterActivity : AppCompatActivity() {
     private var imageUri: Uri? = null
@@ -32,6 +32,11 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(R.layout.loading_item) // Créez un layout XML avec une ProgressBar dedans
+            .setCancelable(false) // Empêche la fermeture du dialog lors de l'appui sur l'écran
+            .create()
 
         binding.imageregister.setOnClickListener {
             openImageChooser()
@@ -121,13 +126,15 @@ class RegisterActivity : AppCompatActivity() {
 
 
         binding.buttonRegister.setOnClickListener {
-            val apiInterface = Api.create()
+            val apiInterface = ClientObject.create()
             val fullname = binding.username.text.toString()
             val email = binding.emaill.text.toString().trim()
             val pass = binding.passwordd.text.toString().trim()
             val cpass = binding.confirmpassword.text.toString().trim()
             val phone = binding.phone.text.toString().trim()
             val image = prepareImagePart(imageUri!!)
+            dialog.show()
+
 
             if (fullname.isEmpty() && email.isEmpty() && pass.isEmpty() && cpass.isEmpty() && phone.isEmpty()){
                 binding.usernamee.error="Must not be empty"
@@ -181,8 +188,12 @@ class RegisterActivity : AppCompatActivity() {
 
             apiInterface.usersignup(fullnameReq ,emailReq, passwordReq,confirmPasswordReq,phoneReq,image)
                 .enqueue(object :Callback<User>{
+
                     override fun onResponse(call: Call<User>, response: Response<User>) {
+
+                        dialog.dismiss()
                         if (response.isSuccessful){
+
                             Toast.makeText(
                                 this@RegisterActivity,
                                 "Register Success",

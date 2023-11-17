@@ -1,70 +1,46 @@
 package tn.esprit.ecoshope
 
-import android.app.Activity
-import android.app.KeyguardManager
-import android.content.Context
-import android.content.DialogInterface
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.hardware.biometrics.BiometricPrompt
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.CancellationSignal
 import android.os.Handler
-import android.os.Message
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import tn.esprit.ecoshope.databinding.ActivityMainBinding
-import tn.esprit.ecoshope.model.user.User
 import tn.esprit.ecoshope.ui.Home.HomeActivity
 import tn.esprit.ecoshope.ui.Home.RegisterActivity
 import tn.esprit.ecoshope.ui.forgetpassword.PhoneActivity
-import tn.esprit.ecoshope.util.retrofitUser.Api
-import kotlin.math.log
+import tn.esprit.ecoshope.util.retrofitUser.ApiResponse
+import tn.esprit.ecoshope.util.ClientObject
+import tn.esprit.ecoshope.util.retrofitUser.ProfileResponse
 
 class MainActivity : AppCompatActivity() {
 
 
-    private var cancellationSignal: CancellationSignal?=null
-    private val authenticationCollback: BiometricPrompt.AuthenticationCallback
-        get() =
-            @RequiresApi(Build.VERSION_CODES.P)
-            object : BiometricPrompt.AuthenticationCallback(){
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
-                    super.onAuthenticationError(errorCode, errString)
-                    notifyuser("Authentication error:$errString ")
-                }
 
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
-                    super.onAuthenticationSucceeded(result)
-                    notifyuser("Authentication success!!")
-                }
 
-            }
 
-    private fun notifyuser(message: String){
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
     private lateinit var binding: ActivityMainBinding
-    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        checkBiometricSupport()
-        biometrique()
+        val dialog = AlertDialog.Builder(this)
+            .setView(R.layout.loading_item) // Créez un layout XML avec une ProgressBar dedans
+            .setCancelable(false) // Empêche la fermeture du dialog lors de l'appui sur l'écran
+            .create()
+
+
 
             binding.forgetpass.setOnClickListener {
                 startActivity(Intent(this,PhoneActivity::class.java))
@@ -111,7 +87,8 @@ class MainActivity : AppCompatActivity() {
         binding.buttonLogin.setOnClickListener {
             val email = binding.emaill.text.toString().trim()
             val password = binding.passwordd.text.toString().trim()
-            val apiInterface = Api.create()
+            val apiInterface = ClientObject.create()
+            dialog.show()
 
 
             if (email.isEmpty() && password.isEmpty()){
@@ -130,36 +107,91 @@ class MainActivity : AppCompatActivity() {
                 Snackbar.make(binding.root,"You have some errors in your inputs!", Snackbar.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-            apiInterface.userlogin(email, password)
-                .enqueue(object : Callback<User>{
-                    override fun onResponse(call: Call<User>, response: Response<User>)
-                    {
-                        if (response.isSuccessful) {
-                            val user = response.body()
-                            if (user != null) {
-                                Toast.makeText(
-                                    this@MainActivity,
-                                    "Login Success",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                startActivity(Intent(applicationContext, HomeActivity::class.java))
+
+                apiInterface.userlogin(email, password)
+                    .enqueue(object : Callback<ApiResponse> {
+                        @SuppressLint("SuspiciousIndentation")
+                        override fun onResponse(
+                            call: Call<ApiResponse>,
+                            response: Response<ApiResponse>
+                        ) {
+                            dialog.dismiss()
+                            if (response.isSuccessful) {
+                                val jwtToken = response.body()?.token
+                                apiInterface.getUser("$jwtToken")
+                                    .enqueue(object : Callback<ProfileResponse> {
+                                        override fun onResponse(
+                                            call: Call<ProfileResponse>,
+                                            response: Response<ProfileResponse>
+                                        ) {
+                                            if (response.isSuccessful) {
+
+
+                                                val sharedPreferences =
+                                                    getSharedPreferences("MyApp", MODE_PRIVATE)
+                                                with(sharedPreferences.edit()) {
+                                                    putString("USER_NAME", response.body()!!.name)
+                                                    putString("USER_EMAIL", response.body()!!.email)
+                                                    putString("PHONE_USER", response.body()!!.phone)
+                                                    putString(
+                                                        "USER_PHOTO_URL",
+                                                        response.body()?.Image
+                                                    )
+                                                    putString("TOKEN", jwtToken)
+                                                    apply()
+                                                }
+
+                                                Toast.makeText(
+                                                    this@MainActivity,
+                                                    "Login Success",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                startActivity(
+                                                    Intent(
+                                                        this@MainActivity,
+                                                        HomeActivity::class.java
+                                                    )
+                                                )
+                                                finish()
+                                            } else {
+                                                Toast.makeText(
+                                                    this@MainActivity,
+                                                    "Error",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+
+
+                                        }
+
+                                        override fun onFailure(
+                                            call: Call<ProfileResponse>,
+                                            t: Throwable
+                                        ) {
+                                            Toast.makeText(
+                                                this@MainActivity,
+                                                "U have some error try again",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+
+                                    })
+
                             } else {
-                                Toast.makeText(
-                                    this@MainActivity,
-                                    "User not found",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                Log.e("LoginError", "Response code: ${response.code()}")
+                                val errorBody = response.errorBody()?.string()
+                                Log.e("LoginError", "Error body: $errorBody")
                             }
-                        }else{
-                            Log.e("LoginError", "Response code: ${response.code()}")
-                            val errorBody = response.errorBody()?.string()
-                            Log.e("LoginError", "Error body: $errorBody")
                         }
-                    }
-                    override fun onFailure(call: Call<User>, t: Throwable) {
-                        Toast.makeText(this@MainActivity, "LoginError", Toast.LENGTH_SHORT).show()
-                    }
-                })
+
+                        override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                            Toast.makeText(this@MainActivity, "LoginError", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    })
+
+
+
         }
         binding.registerLayout.setOnClickListener {
             startActivity(Intent(this,RegisterActivity::class.java))
@@ -167,41 +199,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
-    private fun biometrique() {
-        val biometricPrompt=BiometricPrompt.Builder(this)
-            .setTitle("Authentication")
-            .setSubtitle("Authentication is required")
-            .setDescription("this app uses fingerprint protection to keep your data secure")
-            .setNegativeButton("cancel",this.mainExecutor,DialogInterface.OnClickListener { dialog, which ->
-                notifyuser("Authetication cancelled")
-                finish()
-            }).build()
-        biometricPrompt.authenticate(getCancellationSignal(),mainExecutor,authenticationCollback)
-    }
 
-    private fun getCancellationSignal():CancellationSignal{
-        cancellationSignal= CancellationSignal()
-        cancellationSignal?.setOnCancelListener {
-            notifyuser("Authentication was cancelled by the user")
-        }
-        return cancellationSignal as CancellationSignal
-    }
-
-    private fun checkBiometricSupport():Boolean {
-        val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE)as KeyguardManager
-        if (!keyguardManager.isKeyguardSecure){
-            notifyuser("Fingerprint authentication has not been enabled in settings")
-            return false
-        }
-        if (ActivityCompat.checkSelfPermission(this,android.Manifest.permission.USE_BIOMETRIC)!=PackageManager.PERMISSION_GRANTED){
-            notifyuser("Fingerprint authentication permission is not enabled")
-            return false
-        }
-        return if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)){
-            true
-        }else true
-    }
 
 }
 
