@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EcoShope</string>
+    <string name="app_name">EcoShop</string>
 
     <!--  Inputs | Labels | Buttons -->
     <string name="input_email">Email</string>
@@ -16,37 +16,13 @@
     <string name="txt_forgot_password_desc">Please enter your registered email to reset your password</string>
     <string name="txt_reset_password_desc">Please enter your new password and confirm it.</string>
 
-    <string name="btn_login">Login</string>
-    <string name="btn_signup">Signup</string>
-    <string name="btn_submit">Submit</string>
-    <string name="btn_verify">Verify</string>
-    <string name="btn_sendSMS">Send SMS</string>
-    <string name="btn_register_now">Don\'t have an account? <u>Register Now</u> </string>
-    <string name="btn_resend_code"><u>Resend code</u></string>
-    <string name="btn_terms_and_privacy">By registering you agree to our <u>Terms &amp; Conditions</u> and <u>Privacy Policy</u></string>
-    <string name="btn_forgot_password">Forgot password ?</string>
-    <string name="btn_remember_me">Remember Me</string>
-
-
-    <!--  Menu | Fragments | Navigation -->
-    <string name="item_home">Home</string>
-    <string name="item_profile">Profile</string>
-    <string name="item_notification">Notification</string>
-
-    <!--  ErrorsMessages  -->
-    <string name="msg_must_not_be_empty">Must not be empty!</string>
-    <string name="msg_check_your_email">Must be a valid email!</string>
-    <string name="msg_check_your_confirm_Password">Must be the same password!</string>
-    <string name="msg_error_inputs">You Have some errors in your inputs!</string>
-    <string name="msg_error_wrong_code">Wrong code!</string>
-
     <!--  options of spinner  -->
     <string-array name="sort_options">
-        <item>Date</item>
+        <item>All</item>
+        <item>Favorite</item>
         <item>Product name</item>
-        <item>Impact environnemental</item>
     </string-array>
 
-
+    <string name="recent_scanned_results">Recent Scanned Results</string>
 
 </resources>

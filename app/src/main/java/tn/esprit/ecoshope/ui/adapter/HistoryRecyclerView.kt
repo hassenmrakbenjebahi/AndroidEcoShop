@@ -12,27 +12,39 @@ import tn.esprit.ecoshope.model.History
 
 class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewHolder>(){
 
+    // methode de l'interface "OnListItemHistoryClick"
+    var onListItemHistoryClick:OnListItemHistoryClick? = null
+
     var historyList: ArrayList<History> = ArrayList()
 
     fun setList(list: ArrayList<History>){
         this.historyList = list
         notifyDataSetChanged()
     }
-    class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var iv_prod: ImageView = itemView.findViewById(R.id.iv_product)
         var tv_nameProd: TextView = itemView.findViewById(R.id.tv_name_prod)
-        var tv_descriptionProd: TextView = itemView.findViewById(R.id.tv_desc_product)
+        var tv_dateProd: TextView = itemView.findViewById(R.id.tv_date_product)
         var bv_favoris: ImageButton = itemView.findViewById(R.id.bv_favoris)
 
         fun bind(history: History){
             iv_prod.setImageResource(history.imageId)
             tv_nameProd.text = history.name
-            tv_descriptionProd.text = history.description
+            tv_dateProd.text = history.date
+
             // condition of favorite button
             bv_favoris.setImageResource(
-                if (history.isFavorite) R.drawable.baseline_favorite_24
-                else R.drawable.baseline_favorite_border_24
+                history.isFavorite
+                    .takeIf { it } // Utilisez takeIf pour éviter la double négation
+                    ?.let { R.drawable.baseline_favorite_24 }
+                    ?: R.drawable.baseline_favorite_border_24
             )
+
+            // Product click
+            itemView.setOnClickListener {
+                onListItemHistoryClick?.onItemHistoryClick(history)
+            }
+
         }
     }
 
@@ -50,4 +62,5 @@ class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewH
         var history: History = historyList.get(position)
         holder.bind(history)
     }
+
 }

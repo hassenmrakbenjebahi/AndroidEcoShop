@@ -6,4 +6,15 @@
     <color name="dark_green_button">#18B00E</color>
     <color name="transparent">#00FFFFFF</color>
 
+
+
+    <color name="colorPrimary">#2196f3</color>
+    <color name="colorPrimaryDark">#1565c0</color>
+    <color name="colorAccent">#0097A7</color>
+
+    <!--Secondary colors-->
+    <color name="colorTranslucent">#50000000</color>
+    <color name="lightColor">#64E71A</color>
+    <color name="lightGray">#D1D0D0</color>
+    <color name="darkBrown">#2B2828</color>
 </resources>

@@ -1,56 +1,60 @@
 package tn.esprit.ecoshope.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import tn.esprit.ecoshope.R
+import tn.esprit.ecoshope.databinding.ActivityHistoryBinding
 import tn.esprit.ecoshope.model.History
 import tn.esprit.ecoshope.ui.adapter.HistoryRecyclerView
+import tn.esprit.ecoshope.ui.adapter.OnListItemHistoryClick
 
 
-class HistoryActivity : AppCompatActivity() {
+class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
 
-    lateinit var rv_showData: RecyclerView
-    lateinit var tri_data: Spinner
+    lateinit var binding: ActivityHistoryBinding
+
     lateinit var historyAdapter: HistoryRecyclerView
 
      private var historyList: ArrayList<History> = ArrayList()
+
+     private var originalHistoryList: ArrayList<History> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_history)
+        // Binding
+        binding = ActivityHistoryBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Initialisation des vues
-        tri_data = findViewById(R.id.tri_history);
-        rv_showData = findViewById(R.id.recViewHistory);
-
-        // Configurer l'adaptateur pour RecyclerView avec la liste d'achats
-        historyAdapter.setList(historyList)
+        // Copier la liste initiale dans historyList
+        historyList = ArrayList(originalHistoryList)
 
         // Configurer le RecyclerView
         val layoutManager = LinearLayoutManager(this)
-        rv_showData.setLayoutManager(layoutManager)
+        binding.recViewHistory.setLayoutManager(layoutManager)
 
         // Initialiser et configurer l'adaptateur
         historyAdapter = HistoryRecyclerView()
-        rv_showData.adapter = historyAdapter // Associer l'adaptateur au RecyclerView
-
-        // Testing with data simulation(Static)
-        /* val Data = createData()
-        historyAdapter.setList(Data) */
+        binding.recViewHistory.adapter = historyAdapter // Associer l'adaptateur au RecyclerView
+        historyAdapter.setList(historyList)   // Configurer l'adaptateur pour RecyclerView avec la liste d'achats
 
         // ***************************** SPINNER ************************************************************
         // Configurer l'adaptateur pour les options du Spinner
         val adapter = ArrayAdapter.createFromResource(this, R.array.sort_options, android.R.layout.simple_spinner_item )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        tri_data.adapter = adapter
+        binding.triHistory.adapter = adapter
+
+        // rendre "EditText" invisible
+        binding.edtProductName.visibility = View.GONE
 
         // Écouter les sélections du Spinner
-        tri_data.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.triHistory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
                 selectedItemView: View?,
@@ -61,34 +65,57 @@ class HistoryActivity : AppCompatActivity() {
 
                 // Mettre à jour l'affichage en fonction de l'option sélectionnée
                 when (selectedOption) {
+                    "All" -> {
+                        // Afficher tous les produits
+                        // Réinitialiser la liste à la liste originale
+                        historyList = ArrayList(originalHistoryList)
+                    }
+                    "Favorite" -> {
+                        // afficher uniquement les produits favoris
+                        historyList = ArrayList(originalHistoryList.filter { it.isFavorite })
+                    }
                     "Product name" -> {
-                        // Trier l'historique par montant dépensé
-                        historyList.sortBy { it.name }
+                        binding.edtProductName.visibility = View.VISIBLE
+
+                        binding.edtProductName.addTextChangedListener(object : TextWatcher {
+                            override fun afterTextChanged(s: Editable?) {
+                                val query = s.toString().lowercase()
+                                historyList = ArrayList(originalHistoryList.filter { it.name.lowercase().contains(query) })
+                                historyAdapter.setList(historyList)
+                            }
+                            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                        })
                     }
-                    /*"Date" -> {
-                        // Trier l'historique par date
-                        //historyList.sortBy { it.date }
-                    }
-                    "Impact environnemental" -> {
-                        historyList.sortBy { it.environmentalImpact }
-                    }*/
+
                 }
                 // Actualiser l'adaptateur avec la nouvelle liste triée
                 historyAdapter.setList(historyList)
             }
-
-                override fun onNothingSelected(parentView: AdapterView<*>?) {
-
-                }
-
+                override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
 
-
-        /*private fun createData(): ArrayList<History> {
-            return arrayListOf(
-                History(R.drawable.product, "Product 1", "Description 1", false),
-                History(R.drawable.product, "Product 2", "Description 2", true),
-            )
-        } */
+        historyAdapter.onListItemHistoryClick  = this
     }
+
+    /* "onSaveInstanceState" et "onRestoreInstanceState" garantissent que originalHistoryList
+     est sauvegardé et restauré lors de changements d'orientation
+     ou d'autres modifications d'état de l'activité.*/
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList("originalHistoryList", originalHistoryList)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        originalHistoryList = savedInstanceState.getParcelableArrayList("originalHistoryList") ?: ArrayList()
+    }
+
+    override fun onItemHistoryClick(history: History) {
+        // clique sur un produit pour aller au detaille de produit
+        val intent = Intent(this, ProductDetailsActivity::class.java)
+        intent.putExtra("PRODUCT_DETAILS", history)
+        startActivity(intent)
+    }
+
 }
