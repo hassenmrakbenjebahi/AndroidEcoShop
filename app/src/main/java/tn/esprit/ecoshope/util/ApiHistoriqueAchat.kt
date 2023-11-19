@@ -9,12 +9,6 @@ import tn.esprit.ecoshope.model.History
 
 interface ApiHistoriqueAchat {
 
-    @POST("")
-    fun seConnecter(
-
-        @Query("log") login: String,
-        @Query("pwd") password: String
-    ): Call<History>
 
     companion object {
 
@@ -30,8 +24,5 @@ interface ApiHistoriqueAchat {
             return retrofit.create(ApiHistoriqueAchat::class.java)
         }
     }
-
-
-
 
 }

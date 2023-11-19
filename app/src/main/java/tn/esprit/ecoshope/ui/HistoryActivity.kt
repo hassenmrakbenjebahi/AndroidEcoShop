@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.ActivityHistoryBinding
 import tn.esprit.ecoshope.model.History
+import tn.esprit.ecoshope.model.ProductDetails
 import tn.esprit.ecoshope.ui.adapter.HistoryRecyclerView
 import tn.esprit.ecoshope.ui.adapter.OnListItemHistoryClick
 
@@ -112,9 +113,14 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
     }
 
     override fun onItemHistoryClick(history: History) {
-        // clique sur un produit pour aller au detaille de produit
+        val productDetails = ProductDetails(
+            imageId = history.imageId,
+            name = history.name,
+            description = "Description du produit",
+            impact = "Impact environnemental"
+        )
         val intent = Intent(this, ProductDetailsActivity::class.java)
-        intent.putExtra("PRODUCT_DETAILS", history)
+        intent.putExtra("PRODUCT_DETAILS", productDetails)
         startActivity(intent)
     }
 

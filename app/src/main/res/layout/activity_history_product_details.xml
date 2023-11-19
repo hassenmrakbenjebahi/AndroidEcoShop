@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- activity_product_details.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,43 +6,39 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Ajouter une ImageView pour l'image du produit -->
+    <include
+        android:id="@+id/layoutHeader"
+        layout="@layout/layout_header_history"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
-        android:id="@+id/imageProduct"
+        android:id="@+id/iv_product_details"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/product" />
+        android:layout_height="wrap_content"
+        android:src="@drawable/product"
+        android:scaleType="centerCrop"/>
 
     <TextView
-        android:id="@+id/tvProductName"
+        android:id="@+id/tv_name_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Product Name"
-        android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:textSize="20sp"
+        android:paddingTop="16dp"/>
 
-    <!-- Ajouter un champ pour la description du produit -->
     <TextView
-        android:id="@+id/tvProductDescription"
+        android:id="@+id/tv_description_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Description du produit"/>
+        android:text="Product Description"
+        android:paddingTop="8dp"/>
 
-    <!-- Ajouter un champ pour l'impact environnemental du produit -->
     <TextView
-        android:id="@+id/tvProductImpact"
+        android:id="@+id/tv_impact_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Impact environnemental:"/>
-
-    <Button
-        android:id="@+id/btnSimilarProducts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Produits similaires"/>
-
+        android:text="Environmental Impact"
+        android:paddingTop="8dp"/>
 </LinearLayout>
