@@ -79,7 +79,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\GATAGA\Desktop\node\starbuks.PNG" />
+                                                <entry key="imagePath" value="C:\Users\GATAGA\Documents\image\jk-placeholder-image.jpg" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -111,6 +111,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
+                                      <entry key="foregroundLayerName" value="placeholderimage" />
                                       <entry key="outputName" value="starbucks" />
                                     </map>
                                   </option>

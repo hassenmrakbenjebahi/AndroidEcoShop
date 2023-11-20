@@ -12,11 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.FragmentPostBinding
 import tn.esprit.ecoshope.model.Post
 import tn.esprit.ecoshope.model.Comment
 
 import tn.esprit.ecoshope.ui.adapter.PostAdapter
+import tn.esprit.ecoshope.ui.fragment.AddPostFragment
 import tn.esprit.ecoshope.util.post.ApiPost
 
 class PostFragment: Fragment() {
@@ -50,7 +52,9 @@ class PostFragment: Fragment() {
         })
 
 
-
+        binding.fab.setOnClickListener {
+          fragmentmanager.beginTransaction().replace(R.id.fragment_container,AddPostFragment()).addToBackStack(null).commit()
+        }
         binding.rvPost.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         return binding.root
