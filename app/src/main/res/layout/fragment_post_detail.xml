@@ -18,10 +18,28 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:visibility="invisible"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/d_blog_description"
             app:srcCompat="@drawable/baseline_favorite_border_24"
+            app:layout_constraintBottom_toTopOf="@+id/rvComment"
+
+            />
+        <ImageView
+            android:id="@+id/d_blog_like2_btn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="invisible"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/d_blog_description"
+            app:srcCompat="@drawable/favoriteapp"
             app:layout_constraintBottom_toTopOf="@+id/rvComment"
 
             />
@@ -129,7 +147,7 @@
             android:id="@+id/blog_delete_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@+id/d_blog_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

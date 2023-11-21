@@ -1,12 +1,10 @@
 package tn.esprit.ecoshope.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import retrofit2.Call
@@ -15,11 +13,11 @@ import retrofit2.Response
 import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.FragmentPostBinding
 import tn.esprit.ecoshope.model.Post
-import tn.esprit.ecoshope.model.Comment
 
 import tn.esprit.ecoshope.ui.adapter.PostAdapter
 import tn.esprit.ecoshope.ui.fragment.AddPostFragment
-import tn.esprit.ecoshope.util.post.ApiPost
+import tn.esprit.ecoshope.util.ServiceBuilder
+import tn.esprit.ecoshope.util.post.PostService
 
 class PostFragment: Fragment() {
   private lateinit var binding: FragmentPostBinding
@@ -27,10 +25,9 @@ class PostFragment: Fragment() {
 
 
         binding = FragmentPostBinding.inflate(layoutInflater)
-
+        val postservice=ServiceBuilder.buildService(PostService::class.java)
         val fragmentmanager=requireFragmentManager();
-        val postapi=ApiPost.create()
-        postapi.getPost().enqueue(object :Callback<List<Post>>{
+        postservice.getPost().enqueue(object :Callback<List<Post>>{
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                 if (response.isSuccessful) {
                     val ListPost = response.body()!!

@@ -1,13 +1,11 @@
 package tn.esprit.ecoshope.ui.fragment
 
 import android.app.Activity
-import android.content.ContentResolver
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.OpenableColumns
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,12 +19,13 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.FragmentAddPostBinding
-import tn.esprit.ecoshope.databinding.FragmentPostDetailBinding
 import tn.esprit.ecoshope.model.Post
-import tn.esprit.ecoshope.util.post.ApiPost
+import tn.esprit.ecoshope.ui.PostFragment
+import tn.esprit.ecoshope.util.ServiceBuilder
+import tn.esprit.ecoshope.util.post.PostService
 import java.io.File
-import java.io.IOException
 
 
 class AddPostFragment: Fragment() {
@@ -55,14 +54,18 @@ class AddPostFragment: Fragment() {
 
             val file= File(filePath)
             val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+            Log.d("req", "onViewCreated:$requestFile ")
             val body = MultipartBody.Part.createFormData("media", file.name, requestFile)
             val contentreq=binding.addContent.text.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
-            val postapi=ApiPost.create()
-            postapi.addpost(iduserconnect,contentreq ,body).enqueue(object :Callback<Post>{
+            val postservice= ServiceBuilder.buildService(PostService::class.java)
+
+            postservice.addpost(iduserconnect,contentreq /*,body*/).enqueue(object :Callback<Post>{
                 override fun onResponse(call: Call<Post>, response: Response<Post>) {
                     if(response.isSuccessful){
                         Snackbar.make(binding.root,"post adding successfully",Snackbar.LENGTH_SHORT).show()
+
+
                     }else{
                         Snackbar.make(binding.root,"errreuurr",Snackbar.LENGTH_SHORT).show()
 

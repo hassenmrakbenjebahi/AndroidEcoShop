@@ -11,5 +11,5 @@ data class UserConnect (
     val password:String,
     val confirmPassword:String,
     val phone:String,
-    val image:String
+    val Image:String
 ):Parcelable

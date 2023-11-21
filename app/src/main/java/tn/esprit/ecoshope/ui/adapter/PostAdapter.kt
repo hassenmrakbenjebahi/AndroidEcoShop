@@ -1,14 +1,15 @@
 package tn.esprit.ecoshope.ui.adapter
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,7 +19,8 @@ import tn.esprit.ecoshope.model.Comment
 import tn.esprit.ecoshope.model.Post
 import tn.esprit.ecoshope.model.UserConnect
 import tn.esprit.ecoshope.ui.fragment.PostDetailFragment
-import tn.esprit.ecoshope.util.post.ApiPost
+import tn.esprit.ecoshope.util.ServiceBuilder
+import tn.esprit.ecoshope.util.post.PostService
 
 class PostAdapter (val postlist:List<Post>,private val fragmentManager: FragmentManager) :RecyclerView.Adapter<PostAdapter.PostHolder>(){
 
@@ -31,8 +33,11 @@ class PostAdapter (val postlist:List<Post>,private val fragmentManager: Fragment
         with(holder){
             with(postlist[position]){
                 val onepost=postlist[position]
-                val postapi=ApiPost.create()
-               postapi.detailUser(iduser).enqueue(object :Callback<UserConnect>{
+
+                val iduserconnect="6557d72990b5b8e8cb2b6f1b"
+                val postservice= ServiceBuilder.buildService(PostService::class.java)
+
+                postservice.detailUser(iduser).enqueue(object :Callback<UserConnect>{
                    override fun onResponse(
                        call: Call<UserConnect>,
                        response: Response<UserConnect>
@@ -40,6 +45,15 @@ class PostAdapter (val postlist:List<Post>,private val fragmentManager: Fragment
                         val userpost=response.body()!!
 
                         binding.blogUserName.text=userpost.Username
+                       Glide.with(binding.root)
+                           .load(userpost.Image)
+                           .apply(
+                               RequestOptions()
+                                   .placeholder(R.drawable.starbucks_background) // Optional placeholder image
+                                   .error(R.drawable.jk_placeholder_image) // Optional error image
+                                   .diskCacheStrategy(DiskCacheStrategy.ALL) // Optional: Caching strategy
+                           )
+                           .into(binding.blogUserImage)
 
                    }
                    }
@@ -52,7 +66,7 @@ class PostAdapter (val postlist:List<Post>,private val fragmentManager: Fragment
                })
 
 
-                postapi.getAllCommentPost(id).enqueue(object :Callback<List<Comment>>{
+                postservice.getAllCommentPost(id).enqueue(object :Callback<List<Comment>>{
                     override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                         if(response.isSuccessful){
                             Log.d("commentaret", "onResponse:${response.body()} ")
@@ -69,16 +83,73 @@ class PostAdapter (val postlist:List<Post>,private val fragmentManager: Fragment
 
                 })
 
+                if(searchlike(likes,iduser)){
+                    binding.blogLike2Btn.visibility=View.VISIBLE
+                }else{
+
+                    binding.blogLikeBtn.visibility=View.VISIBLE
+
+                }
+
+
+                binding.blogLikeBtn.setOnClickListener{
+                    val servicepost=ServiceBuilder.buildService(PostService::class.java)
+                    servicepost.addlike(id,iduserconnect).enqueue(object:Callback<Post>{
+                        override fun onResponse(call: Call<Post>, response: Response<Post>) {
+                            if(response.isSuccessful){
+                                binding.blogLike2Btn.visibility=View.VISIBLE
+                                binding.blogLikeBtn.visibility=View.INVISIBLE
+                                //notifyDataSetChanged()
+
+
+                            }
+                        }
+
+                        override fun onFailure(call: Call<Post>, t: Throwable) {
+                            Log.e("erroradd", "onFailure: error", )
+                        }
+
+                    })
+                }
+
+                binding.blogLike2Btn.setOnClickListener{
+                    val servicepost=ServiceBuilder.buildService(PostService::class.java)
+                    servicepost.retirelike(id,iduserconnect).enqueue(object:Callback<Post>{
+                        override fun onResponse(call: Call<Post>, response: Response<Post>) {
+                            if(response.isSuccessful){
+                                binding.blogLike2Btn.visibility=View.INVISIBLE
+                                binding.blogLikeBtn.visibility=View.VISIBLE
+
+                                //notifyDataSetChanged()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<Post>, t: Throwable) {
+                            Log.e("errorretire", "onFailure: error", )
+                        }
+
+                    })
+                }
+
 
                binding.idpost.text=id
-                //binding.blogUserName.text=user[0].Username
                 binding.blogDescription.text=content
                 binding.blogDate.text=publicationDate
                 binding.blogLikeCount.text=likes.size.toString()
-                Picasso.get().load(media).into(binding.blogImage)
+                // Use Glide to load the image into the ImageView
+                Glide.with(binding.root)
+                    .load(media)
+                    .apply(
+                        RequestOptions()
+                            .placeholder(R.drawable.starbucks_background) // Optional placeholder image
+                            .error(R.drawable.jk_placeholder_image) // Optional error image
+                            .diskCacheStrategy(DiskCacheStrategy.ALL) // Optional: Caching strategy
+                    )
+                    .into(binding.blogImage)
                 binding.root.setOnClickListener{
                     navigateToPostDetails(fragmentManager,onepost)
                 }
+
             }
         }
     }
@@ -105,6 +176,18 @@ class PostAdapter (val postlist:List<Post>,private val fragmentManager: Fragment
             commit()
         }
     }
+
+    private fun searchlike( list:List<String>, iduser:String):Boolean{
+       var test=false
+        for(i in 0 until list.size)
+            if(list[i]==iduser){
+                test=true
+            }
+        return test
+
+    }
+
+
 
 
 }
