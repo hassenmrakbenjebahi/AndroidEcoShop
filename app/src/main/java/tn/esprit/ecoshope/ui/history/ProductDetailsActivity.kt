@@ -19,7 +19,8 @@ class ProductDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_product_details)
 
         // Views
-        val layoutHeader : TextView = findViewById(R.id.layoutHeader)
+        val header = findViewById<TextView>(R.id.tvHeaderText)
+        header.text="Product Details"
         val ivProductDetails: ImageView = findViewById(R.id.iv_product_details)
         val tvNameDetails: TextView = findViewById(R.id.tv_name_details)
         val tvDescriptionDetails: TextView = findViewById(R.id.tv_description_details)
@@ -37,7 +38,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val product = response.body()
 
-                    layoutHeader.text = "Product Details"
+
                     //charger l'image depuis l'URL
                     Picasso.get()
                         .load(product?.image)

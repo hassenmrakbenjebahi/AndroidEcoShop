@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,6 +39,10 @@ class HistoryActivity : AppCompatActivity(), OnListItemHistoryClick {
         super.onCreate(savedInstanceState)
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val header = findViewById<TextView>(R.id.tvHeaderText)
+        header.text="Purchase History"
+
         // Copier la liste initiale dans historyList
         historyList = ArrayList(originalHistoryList)
 
@@ -119,6 +124,7 @@ class HistoryActivity : AppCompatActivity(), OnListItemHistoryClick {
         super.onRestoreInstanceState(savedInstanceState)
         originalHistoryList = savedInstanceState.getParcelableArrayList("originalHistoryList") ?: ArrayList()
     }
+
 
     private fun loadHistoryData() {
         val apiService = ClientObject.buildService(ApiHistoriqueAchat::class.java)
