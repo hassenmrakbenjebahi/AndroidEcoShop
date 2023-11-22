@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.history.ProductDetailsActivity"
+    android:orientation="vertical"
+    android:padding="16dp"
+    >
+    <include
+        android:id="@+id/layoutHeader"
+        layout="@layout/layout_header_history"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_product_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/product"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/tv_name_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Product Name"
+        android:textSize="20sp"
+        android:paddingTop="16dp"/>
+
+    <TextView
+        android:id="@+id/tv_description_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Product Description"
+        android:paddingTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_carbonFootprint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CarbonFootprint"
+        android:paddingTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_waterConsumption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="WaterConsumption"
+        android:paddingTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_recyclability"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Recyclability"
+        android:paddingTop="8dp"/>
+
+
+
+</LinearLayout>

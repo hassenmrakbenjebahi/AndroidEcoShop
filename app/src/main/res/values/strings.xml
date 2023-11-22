@@ -92,5 +92,12 @@
     <string name="recent_scanned_results">Recent Scanned Results</string>
     <string name="free_pelastine">Free_Pelastine</string>
 
+    <!--  options of spinner  -->
+    <string-array name="sort_options">
+        <item>All</item>
+        <item>Favorite</item>
+        <item>Product name</item>
+    </string-array>
+
 
 </resources>

@@ -1,7 +1,11 @@
 package tn.esprit.ecoshope.model.entites
 
 data class Product (
-    var name :String,
-    var description:String
-
+   val  name : String,
+    val description : String,
+   val image: String,
+    val code : String,
+    val carbonFootPrint: String,
+    val waterConsumption: String,
+    val recyclability: String
 )

@@ -16,6 +16,7 @@ import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.FragmentPostBinding
 import tn.esprit.ecoshope.model.Post.Post
 import tn.esprit.ecoshope.ui.adapter.PostAdapter
+import tn.esprit.ecoshope.ui.fragment.AddPost
 import tn.esprit.ecoshope.ui.fragment.AddPostFragment
 import tn.esprit.ecoshope.util.ClientObject
 import tn.esprit.ecoshope.util.post.PostService
@@ -57,9 +58,8 @@ class HomeFragment : Fragment() {
 
         })
 
-
         binding.fab.setOnClickListener {
-            startActivity(Intent(context,AddPostFragment::class.java))
+            startActivity(Intent(requireContext(),AddPost::class.java))
         }
         binding.rvPost.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 

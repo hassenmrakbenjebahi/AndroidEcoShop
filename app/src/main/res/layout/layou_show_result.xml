@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -30,7 +29,7 @@
             android:layout_width="37dp"
             android:layout_height="73dp"
             android:layout_marginTop="40dp"
-            android:src="@drawable/ic_text_documents"
+            android:src="@drawable/outline_add_shopping_cart_24"
             android:tint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.505"

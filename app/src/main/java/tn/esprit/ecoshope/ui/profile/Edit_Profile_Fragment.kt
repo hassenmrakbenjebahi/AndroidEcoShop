@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso
 import tn.esprit.ecoshope.MainActivity
 import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.R.drawable
+import tn.esprit.ecoshope.ui.history.HistoryActivity
 import javax.sql.DataSource
 
 class Edit_Profile_Fragment : Fragment() {
@@ -74,6 +75,10 @@ class Edit_Profile_Fragment : Fragment() {
             .into(photoImageView)
 
 
+        val historique = view.findViewById<ImageView>(R.id.historique)
+        historique.setOnClickListener {
+            startActivity(Intent(context,HistoryActivity::class.java))
+        }
 
        /* val sharedPreferences2 = requireActivity().getSharedPreferences("MyApp2", Context.MODE_PRIVATE)
         val userName2 = sharedPreferences2.getString("USER_NAME2", "Default Name")
