@@ -14,7 +14,7 @@ import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.SingleItemCommentBinding
 import tn.esprit.ecoshope.model.Comment
 import tn.esprit.ecoshope.model.UserConnect
-import tn.esprit.ecoshope.util.ServiceBuilder
+import tn.esprit.ecoshope.util.ClientObject
 import tn.esprit.ecoshope.util.post.PostService
 
 class CommentAdapter(val commentlist:List<Comment>):RecyclerView.Adapter<CommentAdapter.CommentHolder>() {
@@ -33,7 +33,7 @@ class CommentAdapter(val commentlist:List<Comment>):RecyclerView.Adapter<Comment
     override fun onBindViewHolder(holder: CommentHolder, position: Int) {
         with(holder){
             with(commentlist[position]){
-                val postservice= ServiceBuilder.buildService(PostService::class.java)
+                val postservice= ClientObject.buildService(PostService::class.java)
 
                 postservice.detailUser(iduser).enqueue(object : Callback<UserConnect> {
                     override fun onResponse(

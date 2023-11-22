@@ -21,7 +21,7 @@ import tn.esprit.ecoshope.model.Comment
 import tn.esprit.ecoshope.model.Post
 import tn.esprit.ecoshope.model.UserConnect
 import tn.esprit.ecoshope.ui.adapter.CommentAdapter
-import tn.esprit.ecoshope.util.ServiceBuilder
+import tn.esprit.ecoshope.util.ClientObject
 import tn.esprit.ecoshope.util.post.PostService
 
 class PostDetailFragment:Fragment() {
@@ -45,7 +45,7 @@ class PostDetailFragment:Fragment() {
             }else {
 
 
-                val postservice= ServiceBuilder.buildService(PostService::class.java)
+                val postservice= ClientObject.buildService(PostService::class.java)
 
                 postservice.addComment(
                     idpost,
@@ -79,7 +79,7 @@ class PostDetailFragment:Fragment() {
             }
         }
 
-        val postservicee= ServiceBuilder.buildService(PostService::class.java)
+        val postservicee= ClientObject.buildService(PostService::class.java)
 
         postservicee.getAllCommentPost(idpost).enqueue(object :Callback<List<Comment>>{
             override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
@@ -129,59 +129,6 @@ class PostDetailFragment:Fragment() {
 
         })
 
-        if(searchlike(post.likes,iduserconnect)){
-            binding.dBlogLike2Btn.visibility=View.VISIBLE
-
-        }else{
-
-            binding.dBlogLikeBtn.visibility=View.VISIBLE
-
-        }
-
-
-
-        binding.dBlogLikeBtn.setOnClickListener{
-            val servicepost=ServiceBuilder.buildService(PostService::class.java)
-            servicepost.addlike(post.id,iduserconnect).enqueue(object:Callback<Post>{
-                override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                    if(response.isSuccessful){
-                        binding.dBlogLike2Btn.visibility=View.VISIBLE
-                        binding.dBlogLikeBtn.visibility=View.INVISIBLE
-                        //notifyDataSetChanged()
-
-
-                    }
-                }
-
-                override fun onFailure(call: Call<Post>, t: Throwable) {
-                    Log.e("erroradd", "onFailure: error", )
-                }
-
-            })
-        }
-
-
-
-        binding.dBlogLike2Btn.setOnClickListener{
-            val servicepost=ServiceBuilder.buildService(PostService::class.java)
-            servicepost.retirelike(post.id,iduserconnect).enqueue(object:Callback<Post>{
-                override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                    if(response.isSuccessful){
-                        binding.dBlogLike2Btn.visibility=View.INVISIBLE
-                        binding.dBlogLikeBtn.visibility=View.VISIBLE
-
-                        //notifyDataSetChanged()
-                    }
-                }
-
-                override fun onFailure(call: Call<Post>, t: Throwable) {
-                    Log.e("errorretire", "onFailure: error", )
-                }
-
-            })
-        }
-
-
 
                 binding.dBlogDate.text=post.publicationDate
                 binding.dBlogDescription.text=post.content
@@ -208,14 +155,6 @@ class PostDetailFragment:Fragment() {
          return true
 
      }
-    private fun searchlike( list:List<String>, iduser:String):Boolean{
-        var test=false
-        for(i in 0 until list.size)
-            if(list[i]==iduser){
-                test=true
-            }
-        return test
 
-    }
 
 }

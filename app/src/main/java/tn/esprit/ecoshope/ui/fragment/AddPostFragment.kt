@@ -19,11 +19,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.FragmentAddPostBinding
 import tn.esprit.ecoshope.model.Post
-import tn.esprit.ecoshope.ui.PostFragment
-import tn.esprit.ecoshope.util.ServiceBuilder
+import tn.esprit.ecoshope.util.ClientObject
 import tn.esprit.ecoshope.util.post.PostService
 import java.io.File
 
@@ -58,7 +56,7 @@ class AddPostFragment: Fragment() {
             val body = MultipartBody.Part.createFormData("media", file.name, requestFile)
             val contentreq=binding.addContent.text.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
-            val postservice= ServiceBuilder.buildService(PostService::class.java)
+            val postservice= ClientObject.buildService(PostService::class.java)
 
             postservice.addpost(iduserconnect,contentreq /*,body*/).enqueue(object :Callback<Post>{
                 override fun onResponse(call: Call<Post>, response: Response<Post>) {

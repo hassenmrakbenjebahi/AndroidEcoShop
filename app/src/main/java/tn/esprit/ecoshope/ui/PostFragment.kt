@@ -16,7 +16,7 @@ import tn.esprit.ecoshope.model.Post
 
 import tn.esprit.ecoshope.ui.adapter.PostAdapter
 import tn.esprit.ecoshope.ui.fragment.AddPostFragment
-import tn.esprit.ecoshope.util.ServiceBuilder
+import tn.esprit.ecoshope.util.ClientObject
 import tn.esprit.ecoshope.util.post.PostService
 
 class PostFragment: Fragment() {
@@ -25,7 +25,7 @@ class PostFragment: Fragment() {
 
 
         binding = FragmentPostBinding.inflate(layoutInflater)
-        val postservice=ServiceBuilder.buildService(PostService::class.java)
+        val postservice=ClientObject.buildService(PostService::class.java)
         val fragmentmanager=requireFragmentManager();
         postservice.getPost().enqueue(object :Callback<List<Post>>{
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {

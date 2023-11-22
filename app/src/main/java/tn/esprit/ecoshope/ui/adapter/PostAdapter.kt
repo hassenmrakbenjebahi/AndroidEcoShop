@@ -19,7 +19,7 @@ import tn.esprit.ecoshope.model.Comment
 import tn.esprit.ecoshope.model.Post
 import tn.esprit.ecoshope.model.UserConnect
 import tn.esprit.ecoshope.ui.fragment.PostDetailFragment
-import tn.esprit.ecoshope.util.ServiceBuilder
+import tn.esprit.ecoshope.util.ClientObject
 import tn.esprit.ecoshope.util.post.PostService
 
 class PostAdapter (val postlist:List<Post>,private val fragmentManager: FragmentManager) :RecyclerView.Adapter<PostAdapter.PostHolder>(){
@@ -35,7 +35,7 @@ class PostAdapter (val postlist:List<Post>,private val fragmentManager: Fragment
                 val onepost=postlist[position]
 
                 val iduserconnect="6557d72990b5b8e8cb2b6f1b"
-                val postservice= ServiceBuilder.buildService(PostService::class.java)
+                val postservice= ClientObject.buildService(PostService::class.java)
 
                 postservice.detailUser(iduser).enqueue(object :Callback<UserConnect>{
                    override fun onResponse(
@@ -93,7 +93,7 @@ class PostAdapter (val postlist:List<Post>,private val fragmentManager: Fragment
 
 
                 binding.blogLikeBtn.setOnClickListener{
-                    val servicepost=ServiceBuilder.buildService(PostService::class.java)
+                    val servicepost=ClientObject.buildService(PostService::class.java)
                     servicepost.addlike(id,iduserconnect).enqueue(object:Callback<Post>{
                         override fun onResponse(call: Call<Post>, response: Response<Post>) {
                             if(response.isSuccessful){
@@ -113,7 +113,7 @@ class PostAdapter (val postlist:List<Post>,private val fragmentManager: Fragment
                 }
 
                 binding.blogLike2Btn.setOnClickListener{
-                    val servicepost=ServiceBuilder.buildService(PostService::class.java)
+                    val servicepost=ClientObject.buildService(PostService::class.java)
                     servicepost.retirelike(id,iduserconnect).enqueue(object:Callback<Post>{
                         override fun onResponse(call: Call<Post>, response: Response<Post>) {
                             if(response.isSuccessful){
