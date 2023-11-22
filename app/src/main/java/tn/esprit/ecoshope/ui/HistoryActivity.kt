@@ -12,9 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.ActivityHistoryBinding
 import tn.esprit.ecoshope.model.History
-import tn.esprit.ecoshope.model.ProductDetails
 import tn.esprit.ecoshope.ui.adapter.HistoryRecyclerView
 import tn.esprit.ecoshope.ui.adapter.OnListItemHistoryClick
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import tn.esprit.ecoshope.util.ApiHistoriqueAchat
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 
 
 class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
@@ -80,8 +84,8 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
 
                         binding.edtProductName.addTextChangedListener(object : TextWatcher {
                             override fun afterTextChanged(s: Editable?) {
-                                val query = s.toString().lowercase()
-                                historyList = ArrayList(originalHistoryList.filter { it.name.lowercase().contains(query) })
+                                val query = s.toString().toLowerCase()
+                                historyList = ArrayList(originalHistoryList.filter { it.nameProduct.toLowerCase().contains(query) })
                                 historyAdapter.setList(historyList)
                             }
                             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -97,6 +101,9 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
         }
 
         historyAdapter.onListItemHistoryClick  = this
+
+        // getAllHistory pour afficher l'historique de l'user
+        loadHistoryData()
     }
 
     /* "onSaveInstanceState" et "onRestoreInstanceState" garantissent que originalHistoryList
@@ -112,16 +119,54 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
         originalHistoryList = savedInstanceState.getParcelableArrayList("originalHistoryList") ?: ArrayList()
     }
 
+    private fun loadHistoryData() {
+        val apiService = ApiHistoriqueAchat.create()
+
+        binding.progressBar.visibility = View.VISIBLE
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                val userId = "234567"
+                val response = apiService.getAllHistory(userId)
+
+                if (response.isSuccessful) {
+                    originalHistoryList = ArrayList(response.body() ?: emptyList())
+                    historyList = ArrayList(originalHistoryList)
+                    historyAdapter.setList(historyList)
+                    showToast("History loaded successfully.")
+                } else {
+                    when (response.code()) {
+                        401 -> {
+                            // Code 401 : Unauthorized
+                            // Redirigez l'utilisateur vers la page de connexion ou affichez un message d'erreur
+                            showToast("Unauthorized. Redirecting to login.")
+                        }
+                        404 -> {
+                            // Code 404 : Not Found
+                            showToast("History not found.")
+                        }
+                        else -> {
+                            // Affichez un message générique d'erreur
+                            showToast("An error occurred.")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                showToast("An error occurred. Please try again later.")
+            }finally {
+                binding.progressBar.visibility = View.GONE
+            }
+        }
+    }
+    private fun showToast(message: String) {
+        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+    }
+
     override fun onItemHistoryClick(history: History) {
-        val productDetails = ProductDetails(
-            imageId = history.imageId,
-            name = history.name,
-            description = "Description du produit",
-            impact = "Impact environnemental"
-        )
         val intent = Intent(this, ProductDetailsActivity::class.java)
-        intent.putExtra("PRODUCT_DETAILS", productDetails)
+        intent.putExtra("productId", history.productId)
         startActivity(intent)
     }
+
 
 }

@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.model.History
 
@@ -28,24 +29,36 @@ class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewH
         var bv_favoris: ImageButton = itemView.findViewById(R.id.bv_favoris)
 
         fun bind(history: History){
-            iv_prod.setImageResource(history.imageId)
-            tv_nameProd.text = history.name
-            tv_dateProd.text = history.date
+            with(itemView) {
+                Picasso.get()
+                    .load(history.imageId)
+                    .placeholder(R.drawable.baseline_find_replace_24) // Image de remplacement
+                    .error(R.drawable.baseline_error_24) // Image à afficher en cas d'erreur de chargement
+                    .into(iv_prod)
 
-            // condition of favorite button
-            bv_favoris.setImageResource(
-                history.isFavorite
-                    .takeIf { it } // Utilisez takeIf pour éviter la double négation
-                    ?.let { R.drawable.baseline_favorite_24 }
-                    ?: R.drawable.baseline_favorite_border_24
-            )
+                tv_nameProd.text = history.nameProduct
+                tv_dateProd.text = history.date
 
+                // Condition de bouton favori
+                bv_favoris.setImageResource(
+                    history.isFavorite
+                        .takeIf { it }
+                        ?.let { R.drawable.baseline_favorite_24 }
+                        ?: R.drawable.baseline_favorite_border_24
+                )
+
+                // method click of product
+                setupClickListeners(history)
+            }
+        }
+
+        private fun setupClickListeners(history: History) {
             // Product click
             itemView.setOnClickListener {
                 onListItemHistoryClick?.onItemHistoryClick(history)
             }
-
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {

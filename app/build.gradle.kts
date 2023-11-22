@@ -56,6 +56,9 @@ dependencies {
     implementation ("androidx.appcompat:appcompat:1.4.1")
     implementation ("com.google.android.material:material:1.4.0")
 
+    // Picasso
+    implementation ("com.squareup.picasso:picasso:2.71828")
+
     // dependencies of retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")

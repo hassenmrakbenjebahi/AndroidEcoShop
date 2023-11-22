@@ -3,21 +3,27 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class History(
-    var imageId: Int,
-    var name: String,
+    val userId: String,
+    val productId: String,
+    var imageId: String,
+    var nameProduct: String,
     var date: String,
     var isFavorite: Boolean,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readInt(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readByte() != 0.toByte(),
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(imageId)
-        parcel.writeString(name)
+        parcel.writeString(userId)
+        parcel.writeString(productId)
+        parcel.writeString(imageId)
+        parcel.writeString(nameProduct)
         parcel.writeString(date)
         parcel.writeByte(if (isFavorite) 1 else 0)
     }
