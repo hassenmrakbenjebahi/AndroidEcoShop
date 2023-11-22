@@ -16,6 +16,7 @@ import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.ActivityCode2Binding
 import tn.esprit.ecoshope.util.retrofitUser.ApiResponse
 import tn.esprit.ecoshope.util.ClientObject
+import tn.esprit.ecoshope.util.retrofitUser.Api
 
 class CodeActivity : AppCompatActivity() {
     private var countdownTimer: CountDownTimer? = null
@@ -37,7 +38,7 @@ class CodeActivity : AppCompatActivity() {
             startCountdown()
         }
         binding.verifyBtn.setOnClickListener {
-            val apiInterface = ClientObject.create()
+            val apiInterface = ClientObject.buildService(Api::class.java)
             val otp1 = binding.otpET1.text.toString()
             val otp2 = binding.otpET2.text.toString()
             val otp3 = binding.otpET3.text.toString()

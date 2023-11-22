@@ -22,6 +22,7 @@ import tn.esprit.ecoshope.databinding.ActivityPhoneBinding
 
 import tn.esprit.ecoshope.util.retrofitUser.ApiResponse
 import tn.esprit.ecoshope.util.ClientObject
+import tn.esprit.ecoshope.util.retrofitUser.Api
 
 
 class PhoneActivity : AppCompatActivity() {
@@ -64,7 +65,7 @@ class PhoneActivity : AppCompatActivity() {
         })
         binding.buttonsub.setOnClickListener {
             dialog.show()
-            val apiInterface = ClientObject.create()
+            val apiInterface = ClientObject.buildService(Api::class.java)
 
             val phone = binding.textphone.text.toString().trim()
 

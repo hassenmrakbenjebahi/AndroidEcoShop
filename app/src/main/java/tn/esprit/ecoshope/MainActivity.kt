@@ -1,6 +1,7 @@
 package tn.esprit.ecoshope
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,31 +10,53 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.animation.AnimationUtils
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import tn.esprit.ecoshope.databinding.ActivityMainBinding
+import tn.esprit.ecoshope.model.user.User
 import tn.esprit.ecoshope.ui.Home.HomeActivity
 import tn.esprit.ecoshope.ui.Home.RegisterActivity
 import tn.esprit.ecoshope.ui.forgetpassword.PhoneActivity
 import tn.esprit.ecoshope.util.retrofitUser.ApiResponse
 import tn.esprit.ecoshope.util.ClientObject
+import tn.esprit.ecoshope.util.retrofitUser.Api
+import tn.esprit.ecoshope.util.retrofitUser.ApiGoogle
 import tn.esprit.ecoshope.util.retrofitUser.ProfileResponse
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val RC_SIGN_IN = 9001
+    }
 
-
+    private lateinit var googleSignInClient:GoogleSignInClient
 
 
 
     private lateinit var binding: ActivityMainBinding
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+
+
+
+
 
         val dialog = AlertDialog.Builder(this)
             .setView(R.layout.loading_item) // Créez un layout XML avec une ProgressBar dedans
@@ -87,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         binding.buttonLogin.setOnClickListener {
             val email = binding.emaill.text.toString().trim()
             val password = binding.passwordd.text.toString().trim()
-            val apiInterface = ClientObject.create()
+            val apiInterface = ClientObject.buildService(Api::class.java)
             dialog.show()
 
 
@@ -130,9 +153,12 @@ class MainActivity : AppCompatActivity() {
                                                 val sharedPreferences =
                                                     getSharedPreferences("MyApp", MODE_PRIVATE)
                                                 with(sharedPreferences.edit()) {
+                                                    putString("USER_ID",response.body()!!._id)
                                                     putString("USER_NAME", response.body()!!.name)
                                                     putString("USER_EMAIL", response.body()!!.email)
                                                     putString("PHONE_USER", response.body()!!.phone)
+
+
                                                     putString(
                                                         "USER_PHOTO_URL",
                                                         response.body()?.Image
@@ -197,10 +223,88 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this,RegisterActivity::class.java))
         }
 
+
+        binding.cardView2.setOnClickListener {
+            signIn()
+        }
+
+    }
+
+    private fun signIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.server_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                val name = account.displayName
+                val email = account.email
+                val photoUrl = account.photoUrl.toString()
+                val sharedPreferences =
+                    getSharedPreferences("MyApp2", MODE_PRIVATE)
+                with(sharedPreferences.edit()) {
+                    putString("USER_NAME2", name)
+                    putString("USER_EMAIL2", email)
+                    putString("USER_PHOTO_URL2", photoUrl)
+
+                    apply()
+                }
+
+
+                AuthWithGoogle(account.idToken!!)
+
+            } catch (e: ApiException) {
+                Toast.makeText(this, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun AuthWithGoogle(idToken: String) {
+        val apiInterface = ClientObject.buildService(Api::class.java)
+        apiInterface.google("$idToken")
+            .enqueue(object :Callback<ApiGoogle>{
+                override fun onResponse(call: Call<ApiGoogle>, response: Response<ApiGoogle>) {
+                    if (response.isSuccessful){
+
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Register Success",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        startActivity(Intent(this@MainActivity,HomeActivity::class.java))
+                    }else{
+                        val errorBody = response.errorBody()?.string()
+                        Log.e("AuthWithGoogle", "Error123: $errorBody")
+                        Toast.makeText(
+                            this@MainActivity,
+                            "U have some error",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                override fun onFailure(call: Call<ApiGoogle>, t: Throwable) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Registe failed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+    }
 }
 
 

@@ -23,6 +23,7 @@ import tn.esprit.ecoshope.model.user.User
 import retrofit2.Callback
 import retrofit2.Response
 import tn.esprit.ecoshope.util.ClientObject
+import tn.esprit.ecoshope.util.retrofitUser.Api
 
 class RegisterActivity : AppCompatActivity() {
     private var imageUri: Uri? = null
@@ -126,7 +127,7 @@ class RegisterActivity : AppCompatActivity() {
 
 
         binding.buttonRegister.setOnClickListener {
-            val apiInterface = ClientObject.create()
+            val apiInterface = ClientObject.buildService(Api::class.java)
             val fullname = binding.username.text.toString()
             val email = binding.emaill.text.toString().trim()
             val pass = binding.passwordd.text.toString().trim()

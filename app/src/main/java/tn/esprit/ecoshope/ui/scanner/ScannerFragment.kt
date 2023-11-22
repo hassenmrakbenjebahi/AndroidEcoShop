@@ -1,22 +1,31 @@
 package tn.esprit.ecoshope.ui.scanner
 
+import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.database.db.DBHelper
 import tn.esprit.ecoshope.database.db.DBHelperr
 import tn.esprit.ecoshope.database.db.DataBase.ScanDataBase
 import tn.esprit.ecoshope.database.db.dialogs.ScanDialog
+import tn.esprit.ecoshope.util.ClientObject
+import tn.esprit.ecoshope.util.retrofitProduct.ApiProduct
+import tn.esprit.ecoshope.util.retrofitProduct.ApiProductResponse
 
 
 class ScannerFragment : Fragment(),ZXingScannerView.ResultHandler {
@@ -27,7 +36,7 @@ class ScannerFragment : Fragment(),ZXingScannerView.ResultHandler {
     }
 
 
-
+    private lateinit var dialog: Dialog
     private lateinit var mView: View
     private lateinit var scannerView : ZXingScannerView
     private lateinit var resultDialog: ScanDialog
@@ -39,24 +48,29 @@ class ScannerFragment : Fragment(),ZXingScannerView.ResultHandler {
         init()
         initViews()
         onclick()
+
         return mView.rootView
     }
 
     private fun init() {
         dbHelper = DBHelperr(ScanDataBase.getAppDataBase(requireContext())!!)
+
     }
 
     private fun initViews() {
         initializeQrScanner()
         setResultDialog()
+
     }
 
     private fun setResultDialog() {
+
         resultDialog = ScanDialog(requireContext())
         resultDialog.setOnDismissListener(object : ScanDialog.onDismissListener{
             override fun onDismiss() {
                 scannerView.resumeCameraPreview(this@ScannerFragment)
             }
+
 
         })
     }
@@ -139,6 +153,7 @@ class ScannerFragment : Fragment(),ZXingScannerView.ResultHandler {
         val insertRowId = dbHelper.insertQrResult(result)
         val qrResult = dbHelper.getQRResult(insertRowId)
         resultDialog.show(qrResult)
+
     }
 
 

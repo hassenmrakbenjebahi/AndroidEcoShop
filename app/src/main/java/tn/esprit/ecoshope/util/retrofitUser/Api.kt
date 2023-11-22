@@ -2,6 +2,7 @@ package tn.esprit.ecoshope.util.retrofitUser
 
 
 import androidx.room.Delete
+import androidx.room.Query
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -91,5 +92,11 @@ interface Api {
         @Field("password") password:String,
         @Field("confirmPassword") confirmPassword:String
     ):Call<ApiResponse>
+
+    @FormUrlEncoded
+    @POST("user/registerUser")
+    fun google(
+        @Field("token") idToken: String
+    ):Call<ApiGoogle>
 
 }

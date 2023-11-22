@@ -42,7 +42,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="112dp"
+            android:layout_marginTop="60dp"
             android:layout_marginEnd="32dp"
             android:gravity="center"
             android:padding="10dp"
@@ -54,10 +54,40 @@
             tools:text="TextView" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/nameproduct"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="product"
+            android:textColor="@color/lightColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/scannedText" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/descriptionproduct"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:text="product"
+            android:textColor="@color/lightColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nameproduct" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/scannedDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="84dp"
+            android:layout_marginTop="156dp"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"

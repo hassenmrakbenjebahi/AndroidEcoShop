@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
@@ -16,6 +17,7 @@ import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.ActivityPersonalBinding
 import tn.esprit.ecoshope.util.retrofitUser.ApiResponse
 import tn.esprit.ecoshope.util.ClientObject
+import tn.esprit.ecoshope.util.retrofitUser.Api
 
 class PersonalActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPersonalBinding
@@ -38,7 +40,7 @@ class PersonalActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
         val userName = sharedPreferences.getString("USER_NAME", "Default Name")
         val userEmail = sharedPreferences.getString("USER_EMAIL", "Default Email")
-        val userPhotoUrl = sharedPreferences.getString("USER_PHOTO_URL", "Default Email")
+        val userPhotoUrl = sharedPreferences.getString("USER_PHOTO_URL", "")
         val phone = sharedPreferences.getString("PHONE_USER","Default Phone")
         val jwtToken = sharedPreferences.getString("TOKEN", "")
 
@@ -53,11 +55,32 @@ class PersonalActivity : AppCompatActivity() {
                 .into(binding.imageView6)          // The ID of your ImageView
         }
 
+      /*  val sharedPreferences2 = getSharedPreferences("MyApp2", Context.MODE_PRIVATE)
+        val userName2 = sharedPreferences2.getString("USER_NAME2", "Default Name")
+        val userEmail2 = sharedPreferences2.getString("USER_EMAIL2", "Default Email")
+        val userPhotoUrl2 = sharedPreferences2.getString("USER_PHOTO_URL2", "")
+        binding.username.setText(userName2)
+        binding.emaill.setText(userEmail2)
+            Glide.with(this)
+                .load(userPhotoUrl2)
+                .error(R.drawable.outline_person_24)
+                .into(binding.imageView6)*/
+
+
+
+
+
+
+
+
+
+
+
         binding.buttonUpdate.setOnClickListener {
             val updatename= binding.username.text.toString().trim()
             val updateemail =binding.emaill.text.toString().trim()
             val updatephone= binding.phone.text.toString().trim()
-            val apiInterface = ClientObject.create()
+            val apiInterface = ClientObject.buildService(Api::class.java)
             dialog.show()
 
             if(updateemail.isEmpty()&&updatename.isEmpty()&&updatephone.isEmpty()){

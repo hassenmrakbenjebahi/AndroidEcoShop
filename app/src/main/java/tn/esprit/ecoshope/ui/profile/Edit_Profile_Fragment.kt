@@ -50,7 +50,7 @@ class Edit_Profile_Fragment : Fragment() {
         val sharedPreferences = requireActivity().getSharedPreferences("MyApp", Context.MODE_PRIVATE)
         val userName = sharedPreferences.getString("USER_NAME", "Default Name")
         val userEmail = sharedPreferences.getString("USER_EMAIL", "Default Email")
-        val userPhotoUrl = sharedPreferences.getString("USER_PHOTO_URL", "Default Email")
+        val userPhotoUrl = sharedPreferences.getString("USER_PHOTO_URL", "")
 
         val nameTextView = view.findViewById<TextView>(R.id.name_profile)
         val emailTextView = view.findViewById<TextView>(R.id.email_profile)
@@ -71,15 +71,20 @@ class Edit_Profile_Fragment : Fragment() {
              .load(userPhotoUrl)
              // Image de remplacement pendant le chargement
              .error(R.drawable.outline_person_24)
-
-
             .into(photoImageView)
 
 
 
-        Log.e("error ya mrydh", "User photo URL: $userPhotoUrl")
-        Log.d("ProfileFragment", "User photo URL: $photoImageView")
-
+       /* val sharedPreferences2 = requireActivity().getSharedPreferences("MyApp2", Context.MODE_PRIVATE)
+        val userName2 = sharedPreferences2.getString("USER_NAME2", "Default Name")
+        val userEmail2 = sharedPreferences2.getString("USER_EMAIL2", "Default Email")
+        val userPhotoUrl2 = sharedPreferences2.getString("USER_PHOTO_URL2", "")
+        view.findViewById<TextView>(R.id.name_profile).text = userName2
+        view.findViewById<TextView>(R.id.email_profile).text = userEmail2
+        Glide.with(this)
+            .load(userPhotoUrl2)
+            .error(R.drawable.outline_person_24)
+            .into(photoImageView)*/
 
 
                /* if (userPhotoUrl!!.isNotEmpty()) {

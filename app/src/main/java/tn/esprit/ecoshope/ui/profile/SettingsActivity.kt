@@ -20,6 +20,7 @@ import retrofit2.Response
 import tn.esprit.ecoshope.MainActivity
 import tn.esprit.ecoshope.databinding.ActivitySettingsBinding
 import tn.esprit.ecoshope.util.ClientObject
+import tn.esprit.ecoshope.util.retrofitUser.Api
 import tn.esprit.ecoshope.util.retrofitUser.ProfileResponse
 
 class SettingsActivity : AppCompatActivity() {
@@ -80,8 +81,7 @@ class SettingsActivity : AppCompatActivity() {
                 .setTitle("Delete Account")
                 .setMessage("Are you sure you want to delete your account? This cannot be undone.")
                 .setPositiveButton("Yes") { dialog, which ->
-                    val apiInterface = ClientObject.create()
-
+                    val apiInterface = ClientObject.buildService(Api::class.java)
                     apiInterface.deleteUser("$jwtToken")
                         .enqueue(object :Callback<ProfileResponse>{
                             override fun onResponse(

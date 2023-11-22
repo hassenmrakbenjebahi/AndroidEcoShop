@@ -16,6 +16,7 @@ import tn.esprit.ecoshope.databinding.ActivityPasswordBinding
 import tn.esprit.ecoshope.ui.forgetpassword.PhoneActivity
 import tn.esprit.ecoshope.util.retrofitUser.ApiResponse
 import tn.esprit.ecoshope.util.ClientObject
+import tn.esprit.ecoshope.util.retrofitUser.Api
 
 class PasswordActivity : AppCompatActivity() {
     private fun notifyuser(message: String){
@@ -50,7 +51,7 @@ class PasswordActivity : AppCompatActivity() {
             val current = binding.currentpasswordd.text.toString()
             val password = binding.passwordd.text.toString()
             val Cpassword = binding.confirmpassword.text.toString()
-            val apiInterface = ClientObject.create()
+            val apiInterface = ClientObject.buildService(Api::class.java)
             dialog.show()
 
             if (current.isEmpty() && password.isEmpty() && Cpassword.isEmpty()) {

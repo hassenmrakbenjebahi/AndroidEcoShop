@@ -15,6 +15,7 @@ import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.ActivityResetPasswordBinding
 import tn.esprit.ecoshope.util.retrofitUser.ApiResponse
 import tn.esprit.ecoshope.util.ClientObject
+import tn.esprit.ecoshope.util.retrofitUser.Api
 
 
 class Reset_Password_Activity : AppCompatActivity() {
@@ -36,7 +37,7 @@ class Reset_Password_Activity : AppCompatActivity() {
 
 
         binding.subBtn.setOnClickListener {
-            val apiInterface = ClientObject.create()
+            val apiInterface = ClientObject.buildService(Api::class.java)
             val pass = binding.passwordd.text.toString().trim()
             val cpass = binding.confirmpassword.text.toString().trim()
             dialog.show()

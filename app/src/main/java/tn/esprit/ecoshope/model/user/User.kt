@@ -4,4 +4,5 @@ data class User( val Username:String, val email:String,
                  val password:String,
                  val confirmPassword:String,
                  val phone:String,
-                 val Image:String )
+                 val Image:String,
+                    val googleId:String)
