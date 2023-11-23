@@ -25,7 +25,7 @@ interface ApiHistoriqueAchat {
     suspend fun getOnce(@Path("id") productId: String): Response<Product>
 
     companion object {
-       private var BASE_URL = "http://192.168.1.22:9090/"
+       private var BASE_URL = "http://172.20.10.2:9090/"
         fun create() : ApiHistoriqueAchat {
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
