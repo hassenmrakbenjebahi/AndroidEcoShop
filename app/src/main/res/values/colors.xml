@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="green">#85D68D</color>
-    <color name="dark_green_button">#18B00E</color>
-    <color name="transparent">#00FFFFFF</color>
+    <color name="pale_black">#1D1D1D</color>
+    <color name="dark_grey">#2D2D2D</color>
+    <color name="white">#ffffff</color>
+    <!-- res/values/colors.xml -->
+        <color name="colorBackground">#FFFFFF</color>
+        <color name="colorTextIcons">#000000</color>
+        <!-- Add more colors as needed -->
+
 
 </resources>
