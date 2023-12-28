@@ -1,5 +1,6 @@
 package tn.esprit.ecoshope.util
 
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Response
@@ -12,11 +13,12 @@ import tn.esprit.ecoshope.model.History
 import tn.esprit.ecoshope.model.Product
 
 interface ApiHistoriqueAchat {
-    @POST("/historique/addToHistory")
-    suspend fun addToHistory(@Body history: History): Response<History>
 
     @GET("/historique/getAllHistory/{historyByUserId}")
-    suspend fun getAllHistory(@Path("historyByUserId") userId: String): Response<List<History>>
+     fun getAllHistory(@Path("historyByUserId") userId: String): Call<List<History>>
+
+    @GET("/historique/getAllHistory2")
+    fun getAllHistory2(): Call<List<History>>
 
     @DELETE("/historique/deleteHistory/{historyId}")
     suspend fun deleteHistory(@Path("historyId") historyId: String): Response<Unit>

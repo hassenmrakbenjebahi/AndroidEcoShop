@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.model.History
+import java.util.Collections
 
-class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewHolder>(){
+class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewHolder>() {
 
     // methode de l'interface "OnListItemHistoryClick"
     var onListItemHistoryClick:OnListItemHistoryClick? = null
@@ -30,12 +31,8 @@ class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewH
 
         fun bind(history: History){
             with(itemView) {
-                Picasso.get()
-                    .load(history.imageId)
-                    .placeholder(R.drawable.baseline_find_replace_24) // Image de remplacement
-                    .error(R.drawable.baseline_error_24) // Image à afficher en cas d'erreur de chargement
-                    .into(iv_prod)
 
+                iv_prod.setImageResource(history.imageId)
                 tv_nameProd.text = history.nameProduct
                 tv_dateProd.text = history.date
 
@@ -47,22 +44,30 @@ class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewH
                         ?: R.drawable.baseline_favorite_border_24
                 )
 
-                // method click of product
-                setupClickListeners(history)
+                bv_favoris.setOnClickListener {
+                    // Inverser l'état isFavorite lorsque le bouton est cliqué
+                    history.isFavorite = !history.isFavorite
+                    // Mettre à jour l'image du bouton
+                    bv_favoris.setImageResource(
+                        history.isFavorite
+                            .takeIf { it }
+                            ?.let { R.drawable.baseline_favorite_24 }
+                            ?: R.drawable.baseline_favorite_border_24
+                    )
+                }
+
+                // Product click
+                itemView.setOnClickListener {
+                    onListItemHistoryClick?.onItemHistoryClick(history)
+                }
             }
         }
 
-        private fun setupClickListeners(history: History) {
-            // Product click
-            itemView.setOnClickListener {
-                onListItemHistoryClick?.onItemHistoryClick(history)
-            }
-        }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
-        var view: View = LayoutInflater.from(parent.context).inflate(R.layout.list_item_history, parent, false)
+        var view: View = LayoutInflater.from(parent.context).inflate(R.layout.single_item, parent, false)
         return HistoryViewHolder(view)
     }
 
@@ -74,6 +79,24 @@ class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewH
         // Configurez les vues à l'intérieur de chaque élément
         var history: History = historyList.get(position)
         holder.bind(history)
+    }
+
+    // methode pour la suppression d'un ITEM
+    fun removeAt(position: Int) {
+        historyList.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+     fun onItemMove(fromPosition: Int, toPosition: Int) {
+        // Mettez à jour la liste lorsque les éléments sont déplacés
+        Collections.swap(historyList, fromPosition, toPosition)
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+    // ... Autres méthodes de l'adaptateur
+
+    interface ItemTouchHelperAdapter {
+        fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
     }
 
 }

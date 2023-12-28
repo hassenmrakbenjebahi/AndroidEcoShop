@@ -51,7 +51,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:orientation="vertical"
-        tools:listitem="@layout/list_item_history"/>
+        android:layout_margin="10dp"
+        tools:listitem="@layout/single_item"/>
 
     <!-- ProgressBar -->
     <ProgressBar

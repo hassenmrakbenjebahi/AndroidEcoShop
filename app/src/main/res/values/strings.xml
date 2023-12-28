@@ -25,4 +25,17 @@
 
     <string name="recent_scanned_results">Recent Scanned Results</string>
 
+
+    <string name="prod1">Flitox</string>
+    <string name="prod2">Papier</string>
+    <string name="prod3">Danao</string>
+    <string name="prod4">Eau</string>
+    <string name="prod5">Spaguetti</string>
+
+    <string name="date1">01/09/2023</string>
+    <string name="date2">08/09/2023</string>
+    <string name="date3">10/10/2023</string>
+    <string name="date4">20/10/2023</string>
+    <string name="date5">22/10/2023</string>
+
 </resources>

@@ -10,6 +10,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import tn.esprit.ecoshope.R
+import tn.esprit.ecoshope.model.History
 import tn.esprit.ecoshope.model.Product
 import tn.esprit.ecoshope.util.ApiHistoriqueAchat
 
@@ -19,7 +20,9 @@ class ProductDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_history_product_details)
 
         // Views
-        val layoutHeader : TextView = findViewById(R.id.layoutHeader)
+        val header = findViewById<TextView>(R.id.tvHeaderText)
+        header.text="Product Details"
+
         val ivProductDetails: ImageView = findViewById(R.id.iv_product_details)
         val tvNameDetails: TextView = findViewById(R.id.tv_name_details)
         val tvDescriptionDetails: TextView = findViewById(R.id.tv_description_details)
@@ -28,17 +31,24 @@ class ProductDetailsActivity : AppCompatActivity() {
         val tvRecyclability: TextView = findViewById(R.id.tv_recyclability)
 
         // get productId from intent
-        val productId = intent.getStringExtra("productId")
+        val productDetails = intent.getParcelableExtra<History>("productDetails")
+        if (productDetails != null) {
+            ivProductDetails.setImageResource(productDetails.imageId)
+            tvNameDetails.text = productDetails.nameProduct
+            tvDescriptionDetails.text = "Description: ${productDetails.description}"
+            tvCarbonFootprint.text = "Carbon Footprint: ${productDetails.carbonFootprint}"
+            tvWaterConsumption.text = "Water Consumption: ${productDetails.waterConsumption}"
+            tvRecyclability.text = "Recyclability: ${productDetails.recyclability}"
+        }
 
         // API
-        val apiService = ApiHistoriqueAchat.create()
+        /*val apiService = ApiHistoriqueAchat.create()
         lifecycleScope.launch(Dispatchers.Main) {
             try {
                 val response = apiService.getOnce(productId ?: "")
                 if (response.isSuccessful) {
                     val product = response.body()
 
-                    layoutHeader.text = "Product Details"
                     //charger l'image depuis l'URL
                     Picasso.get()
                         .load(product?.image)
@@ -57,12 +67,12 @@ class ProductDetailsActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 showToast("An error occurred. Please try again later.")
             }
-        }
+        }*/
 
     }
 
-    private fun showToast(message: String) {
+   /* private fun showToast(message: String) {
         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-    }
+    }*/
 
 }
