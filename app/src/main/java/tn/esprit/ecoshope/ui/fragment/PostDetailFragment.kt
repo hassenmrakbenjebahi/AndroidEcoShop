@@ -87,9 +87,6 @@ class PostDetailFragment:Fragment() {
                     Log.d("commentaret", "onResponse:${response.body()} ")
                     val listcomment=response.body()!!
                     binding.rvComment.adapter = CommentAdapter(listcomment)
-                    binding.dBlogCommentCount.text=listcomment.size.toString()
-
-
 
                 }
             }
@@ -98,50 +95,6 @@ class PostDetailFragment:Fragment() {
             }
 
         })
-
-
-        postservicee.detailUser(post.iduser).enqueue(object :Callback<UserConnect>{
-            override fun onResponse(
-                call: Call<UserConnect>,
-                response: Response<UserConnect>
-            ) {if(response.isSuccessful){
-                val userpost=response.body()!!
-
-                binding.dBlogUserName.text=userpost.Username
-                Glide.with(binding.root)
-                    .load(userpost.Image)
-                    .apply(
-                        RequestOptions()
-                            .placeholder(R.drawable.starbucks_background) // Optional placeholder image
-                            .error(R.drawable.jk_placeholder_image) // Optional error image
-                            .diskCacheStrategy(DiskCacheStrategy.ALL) // Optional: Caching strategy
-                    )
-                    .into(binding.dBlogUserImage)
-
-
-            }
-            }
-
-            override fun onFailure(call: Call<UserConnect>, t: Throwable) {
-                Log.e("Network Error", t.toString())
-
-            }
-
-        })
-
-
-                binding.dBlogDate.text=post.publicationDate
-                binding.dBlogDescription.text=post.content
-                binding.dBlogLikeCount.text=post.likes.size.toString()
-        Glide.with(binding.root)
-            .load(post.media)
-            .apply(
-                RequestOptions()
-                    .placeholder(R.drawable.starbucks_background) // Optional placeholder image
-                    .error(R.drawable.jk_placeholder_image) // Optional error image
-                    .diskCacheStrategy(DiskCacheStrategy.ALL) // Optional: Caching strategy
-            )
-            .into(binding.dBlogImage)
                binding.rvComment.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         return binding.root

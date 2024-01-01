@@ -27,7 +27,7 @@ interface PostService {
     @GET("comments/{id}")
     fun getAllCommentPost(@Path("id") id: String): Call<List<Comment>>
     @Multipart
-    @POST("posts/addpost/{id}")
+    @POST("posts/addpostA/{id}")
     fun addpost(@Path("id")id:String, @Part("content") content: RequestBody/*, @Part media: MultipartBody.Part*/): Call<Post>
 
     @PUT("posts/addlike/{id}/{idu}")
