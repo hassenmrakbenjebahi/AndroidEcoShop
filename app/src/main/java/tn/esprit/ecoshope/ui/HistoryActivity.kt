@@ -1,26 +1,29 @@
 package tn.esprit.ecoshope.ui
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.databinding.ActivityHistoryBinding
 import tn.esprit.ecoshope.model.History
 import tn.esprit.ecoshope.model.Product
+import tn.esprit.ecoshope.model.UserHistory
 import tn.esprit.ecoshope.ui.adapter.HistoryRecyclerView
 import tn.esprit.ecoshope.ui.adapter.OnListItemHistoryClick
+import tn.esprit.ecoshope.util.RetrofitClient
 
 
 
@@ -44,11 +47,12 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
 
         // Title of the page
         val header = findViewById<TextView>(R.id.tvHeaderText)
-        header.text="Purchases History"
+        header.text="Products History"
 
         // Configurer le RecyclerView
         val layoutManager = LinearLayoutManager(this)
         binding.recViewHistory.setLayoutManager(layoutManager)
+
 
         historyList.add(History(R.drawable.product, getString(R.string.prod1), getString(R.string.date1), isFavorite = false,
             description = "Destructeur D'insectes · Diffuseur De Parfum · Recharge Diffuseur Parfum ... FLYTOX CHOC COMBAT.",
@@ -82,6 +86,7 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
             waterConsumption = "0 L",
             recyclability = "Non recyclable"))
 
+
         // Initialiser et configurer l'adaptateur
         historyAdapter = HistoryRecyclerView()
         binding.recViewHistory.adapter = historyAdapter // Associer l'adaptateur au RecyclerView
@@ -95,6 +100,11 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
                 // Appeler la fonction removeAt lorsqu'un élément est swipé
                 val position = viewHolder.adapterPosition
                 historyAdapter.removeAt(position)
+
+                // DYNAMIC
+              /*  val position = viewHolder.adapterPosition
+                val historyToDelete = historyList[position]
+                deleteFromHistory(historyToDelete) */
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
@@ -128,6 +138,7 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
                     "Favorite" -> {
                         binding.edtProductName.visibility = View.GONE
                         favorisList = ArrayList(historyList.filter { it.isFavorite })
+                     //   favorisList = ArrayList(historyList.filter { it.productId.isFavorite })   // DYNAMIC
                         historyAdapter.setList(favorisList)
                     }
                     "Product name" -> {
@@ -136,8 +147,9 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
                         binding.edtProductName.addTextChangedListener(object : TextWatcher {
                             override fun afterTextChanged(s: Editable?) {
                                 val query = s.toString().toLowerCase()
-                                originalHistoryList = ArrayList(historyList.filter { it.nameProduct.toLowerCase().contains(query) })
-                                historyAdapter.setList(originalHistoryList)
+                                originalHistoryList = ArrayList(historyList.filter { it.name.toLowerCase().contains(query) })
+                              //   originalHistoryList = ArrayList(historyList.filter { it.productId.name.toLowerCase().contains(query) })
+                                 historyAdapter.setList(originalHistoryList)
                             }
                             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -149,13 +161,18 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
 
+        // method to get history by userID
+       // getUserHistory()
+
     }
 
+
+    // STATIC
     override fun onItemHistoryClick(history: History) {
         val intent = Intent(this, ProductDetailsActivity::class.java)
         val productDetails = History(
             imageId = history.imageId,
-            nameProduct = history.nameProduct,
+            name = history.name,
             date = history.date,
             isFavorite = history.isFavorite,
             description = history.description,
@@ -166,5 +183,91 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
         intent.putExtra("productDetails", productDetails)
         startActivity(intent)
     }
+
+
+    // Get the User History By userId
+  /*  private fun getUserHistory() {
+        val userId = "655eb3794113a9b1e259ceb6"
+        binding.progressBar.visibility = View.VISIBLE // Assuming a ProgressBar is added
+
+        RetrofitClient.instance.getUserHistory(userId)
+            .enqueue(object : Callback<Response<List<UserHistory>>> {
+                override fun onResponse(
+                    call: Call<Response<List<UserHistory>>>,
+                    response: Response<Response<List<UserHistory>>>
+                ) {
+                    if (response.isSuccessful) {
+                        val historyList = response.body()?.body() ?: emptyList()
+                        val historyItems = historyList.map { it.toHistory() }
+                        historyAdapter.setList(historyItems.toCollection(ArrayList()))
+                        binding.progressBar.visibility = View.GONE
+                    } else {
+                        // Handle error
+                        Toast.makeText(this@HistoryActivity, "Failed to fetch history", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Response<List<UserHistory>>>, t: Throwable) {
+                    // Handle network error
+                    Toast.makeText(this@HistoryActivity, "Network error", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+    private fun UserHistory.toHistory(): History {
+        return History(
+            id = this.id,
+            userId = this.userId,
+            productId = this.productId,
+            date = this.date
+        )
+    }   */
+
+
+    // Get the product
+  /*  override fun onItemHistoryClick(history: History) {
+        RetrofitClient.instance.getProductDetails(history.productId.id)
+            .enqueue(object : Callback<Product> {
+                override fun onResponse(call: Call<Product>, response: Response<Product>) {
+                    if (response.isSuccessful) {
+                        val product = response.body()!!
+                        val intent = Intent(this@HistoryActivity, ProductDetailsActivity::class.java)
+                        intent.putExtra("product", product)
+                        startActivity(intent)
+                    } else {
+                        // Handle error
+                        Toast.makeText(this@HistoryActivity, "Failed to get product details", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Product>, t: Throwable) {
+                    // Handle network error
+                    Toast.makeText(this@HistoryActivity, "Network error", Toast.LENGTH_SHORT).show()
+                }
+            })
+    } */
+
+
+    // Delete from history
+  /*  private fun deleteFromHistory(history: History) {
+        RetrofitClient.instance.deleteFromHistory(history.id)
+            .enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@HistoryActivity, "Item deleted", Toast.LENGTH_SHORT).show()
+                        historyAdapter.removeAt(historyList.indexOf(history))
+                    } else {
+                        // Handle error
+                        Toast.makeText(this@HistoryActivity, "Failed to delete item", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    // Handle network error
+                    Toast.makeText(this@HistoryActivity, "Network error", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }  */
+
 
 }

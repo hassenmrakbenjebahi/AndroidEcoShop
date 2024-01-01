@@ -1,12 +1,9 @@
 package tn.esprit.ecoshope.ui
-import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.ui.adapter.HistoryRecyclerView
 
 open class SwipeToDeleteCallback (private val adapter: HistoryRecyclerView) : ItemTouchHelper.Callback() {

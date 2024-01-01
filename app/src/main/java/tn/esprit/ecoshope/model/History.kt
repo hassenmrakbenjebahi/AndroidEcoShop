@@ -1,11 +1,22 @@
 package tn.esprit.ecoshope.model
 
+import com.google.gson.annotations.SerializedName
+import java.time.LocalDateTime
 import android.os.Parcel
 import android.os.Parcelable
 
+
+/*data class History(
+    @SerializedName("_id") val id: String,
+    val userId: String,
+    val productId: Product,
+    val date: LocalDateTime,
+)*/
+
+
 data class History(
     var imageId: Int,
-    var nameProduct: String,
+    var name: String,
     var date: String,
     var isFavorite: Boolean,
     val description: String,
@@ -27,7 +38,7 @@ data class History(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(imageId)
-        parcel.writeString(nameProduct)
+        parcel.writeString(name)
         parcel.writeString(date)
         parcel.writeByte(if (isFavorite) 1 else 0)
         parcel.writeString(description)

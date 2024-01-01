@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import tn.esprit.ecoshope.R
 import tn.esprit.ecoshope.model.History
+import java.text.SimpleDateFormat
 import java.util.Collections
+import java.util.Locale
 
 class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewHolder>() {
 
@@ -32,13 +34,23 @@ class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewH
         fun bind(history: History){
             with(itemView) {
 
+                // Static
                 iv_prod.setImageResource(history.imageId)
-                tv_nameProd.text = history.nameProduct
+                tv_nameProd.text = history.name
                 tv_dateProd.text = history.date
+
+
+                // Dynamic
+               /* Picasso.get().load(history.productId.image).into(iv_prod)
+                tv_nameProd.text = history.productId.name
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+                tv_dateProd.text = dateFormat.format(history.date) */
+
 
                 // Condition de bouton favori
                 bv_favoris.setImageResource(
-                    history.isFavorite
+                    history.isFavorite      // STATIC
+                  //  history.productId.isFavorite // dynamic
                         .takeIf { it }
                         ?.let { R.drawable.baseline_favorite_24 }
                         ?: R.drawable.baseline_favorite_border_24
@@ -46,10 +58,14 @@ class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewH
 
                 bv_favoris.setOnClickListener {
                     // Inverser l'état isFavorite lorsque le bouton est cliqué
-                    history.isFavorite = !history.isFavorite
+                    history.isFavorite = !history.isFavorite   // STATIC
+                 //  history.productId.isFavorite = !history.productId.isFavorite  // dynamic
+
                     // Mettre à jour l'image du bouton
                     bv_favoris.setImageResource(
-                        history.isFavorite
+                        history.isFavorite              // STATIC
+
+                    //    history.productId.isFavorite // dynamic
                             .takeIf { it }
                             ?.let { R.drawable.baseline_favorite_24 }
                             ?: R.drawable.baseline_favorite_border_24
@@ -92,8 +108,6 @@ class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewH
         Collections.swap(historyList, fromPosition, toPosition)
         notifyItemMoved(fromPosition, toPosition)
     }
-
-    // ... Autres méthodes de l'adaptateur
 
     interface ItemTouchHelperAdapter {
         fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
