@@ -6,15 +6,15 @@ import android.os.Parcel
 import android.os.Parcelable
 
 
-/*data class History(
+/* data class History(
     @SerializedName("_id") val id: String,
     val userId: String,
     val productId: Product,
     val date: LocalDateTime,
-)*/
+) */
 
 
-data class History(
+ data class History(
     var imageId: Int,
     var name: String,
     var date: String,

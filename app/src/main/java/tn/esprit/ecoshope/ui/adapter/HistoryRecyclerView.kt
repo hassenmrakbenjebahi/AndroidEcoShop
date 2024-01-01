@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.Collections
 import java.util.Locale
 
+
 class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewHolder>() {
 
     // methode de l'interface "OnListItemHistoryClick"
@@ -35,13 +36,13 @@ class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewH
             with(itemView) {
 
                 // Static
-                iv_prod.setImageResource(history.imageId)
+               iv_prod.setImageResource(history.imageId)
                 tv_nameProd.text = history.name
                 tv_dateProd.text = history.date
 
 
                 // Dynamic
-               /* Picasso.get().load(history.productId.image).into(iv_prod)
+              /*  Picasso.get().load(history.productId.image).into(iv_prod)
                 tv_nameProd.text = history.productId.name
                 val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
                 tv_dateProd.text = dateFormat.format(history.date) */
@@ -50,7 +51,7 @@ class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewH
                 // Condition de bouton favori
                 bv_favoris.setImageResource(
                     history.isFavorite      // STATIC
-                  //  history.productId.isFavorite // dynamic
+                  // history.productId.isFavorite // dynamic
                         .takeIf { it }
                         ?.let { R.drawable.baseline_favorite_24 }
                         ?: R.drawable.baseline_favorite_border_24
@@ -59,13 +60,13 @@ class HistoryRecyclerView :RecyclerView.Adapter<HistoryRecyclerView.HistoryViewH
                 bv_favoris.setOnClickListener {
                     // Inverser l'état isFavorite lorsque le bouton est cliqué
                     history.isFavorite = !history.isFavorite   // STATIC
-                 //  history.productId.isFavorite = !history.productId.isFavorite  // dynamic
+                  // history.productId.isFavorite = !history.productId.isFavorite  // dynamic
 
                     // Mettre à jour l'image du bouton
                     bv_favoris.setImageResource(
                         history.isFavorite              // STATIC
 
-                    //    history.productId.isFavorite // dynamic
+                      //  history.productId.isFavorite // dynamic
                             .takeIf { it }
                             ?.let { R.drawable.baseline_favorite_24 }
                             ?: R.drawable.baseline_favorite_border_24

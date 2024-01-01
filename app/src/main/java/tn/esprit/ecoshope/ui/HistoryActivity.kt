@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.threetenabp.AndroidThreeTen
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,7 +25,8 @@ import tn.esprit.ecoshope.model.UserHistory
 import tn.esprit.ecoshope.ui.adapter.HistoryRecyclerView
 import tn.esprit.ecoshope.ui.adapter.OnListItemHistoryClick
 import tn.esprit.ecoshope.util.RetrofitClient
-
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
@@ -41,6 +43,8 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         // Binding
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -56,35 +60,35 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
 
         historyList.add(History(R.drawable.product, getString(R.string.prod1), getString(R.string.date1), isFavorite = false,
             description = "Destructeur D'insectes · Diffuseur De Parfum · Recharge Diffuseur Parfum ... FLYTOX CHOC COMBAT.",
-            carbonFootprint = "250 KG",
-            waterConsumption = "0 L",
-            recyclability = "Non recyclable"))
+            carbonFootprint = "250",
+            waterConsumption = "0",
+            recyclability = "10"))
 
         historyList.add(History(R.drawable.eau, getString(R.string.prod4) , getString(R.string.date4), isFavorite = false,
             description = "Corps liquide à la température et à la pression ordinaires, incolore, inodore, insipide, " +
                     "dont les molécules sont composées d'un atome d'oxygène et de deux atomes d'hydrogène.",
-            carbonFootprint = "0 KG",
-            waterConsumption = "1 L",
-            recyclability = "Recyclable"))
+            carbonFootprint = "0",
+            waterConsumption = "1",
+            recyclability = "44"))
 
         historyList.add(History( R.drawable.danao, getString(R.string.prod3) , getString(R.string.date3), isFavorite =false,
             description = "Epluchez les carottes et les oranges. Passez-les à la centrifugeuse. Ajoutez le lait et le miel ou le sirop d'agave et mélangez bien. " +
                     "Votre Danao maison se déguste hyper frais pour commencer la journée en douceur et en fraicheur ",
-            carbonFootprint = "0.2 KG",
-            waterConsumption = "3 L",
-            recyclability = "Non recyclable"))
+            carbonFootprint = "0.2",
+            waterConsumption = "3",
+            recyclability = "90"))
 
         historyList.add(History(R.drawable.papier, getString(R.string.prod2) , getString(R.string.date2), isFavorite = false,
             description = "Apparu en 1924, le mouchoir en papier, non lavable, est plus hygiénique et participe de l'ère du « tout-jetable  ",
-            carbonFootprint = "40 KG",
-            waterConsumption = "0 L",
-            recyclability = "Non recyclable"))
+            carbonFootprint = "40",
+            waterConsumption = "0",
+            recyclability = "85"))
 
         historyList.add(History(R.drawable.makrouna, getString(R.string.prod5) , getString(R.string.date5), isFavorite =false,
             description = "Les spaghetti ou spaghettis sont un plat de pâtes longues, fines et cylindriques, typique de la cuisine italienne",
-            carbonFootprint = "20 KG",
-            waterConsumption = "0 L",
-            recyclability = "Non recyclable"))
+            carbonFootprint = "20",
+            waterConsumption = "0",
+            recyclability = "97"))
 
 
         // Initialiser et configurer l'adaptateur
@@ -138,7 +142,7 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
                     "Favorite" -> {
                         binding.edtProductName.visibility = View.GONE
                         favorisList = ArrayList(historyList.filter { it.isFavorite })
-                     //   favorisList = ArrayList(historyList.filter { it.productId.isFavorite })   // DYNAMIC
+                      //  favorisList = ArrayList(historyList.filter { it.productId.isFavorite })   // DYNAMIC
                         historyAdapter.setList(favorisList)
                     }
                     "Product name" -> {
@@ -148,8 +152,8 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
                             override fun afterTextChanged(s: Editable?) {
                                 val query = s.toString().toLowerCase()
                                 originalHistoryList = ArrayList(historyList.filter { it.name.toLowerCase().contains(query) })
-                              //   originalHistoryList = ArrayList(historyList.filter { it.productId.name.toLowerCase().contains(query) })
-                                 historyAdapter.setList(originalHistoryList)
+                              //  originalHistoryList = ArrayList(historyList.filter { it.productId.name.toLowerCase().contains(query) })
+                                historyAdapter.setList(originalHistoryList)
                             }
                             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -164,24 +168,6 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
         // method to get history by userID
        // getUserHistory()
 
-    }
-
-
-    // STATIC
-    override fun onItemHistoryClick(history: History) {
-        val intent = Intent(this, ProductDetailsActivity::class.java)
-        val productDetails = History(
-            imageId = history.imageId,
-            name = history.name,
-            date = history.date,
-            isFavorite = history.isFavorite,
-            description = history.description,
-            carbonFootprint = history.carbonFootprint,
-            waterConsumption = history.waterConsumption,
-            recyclability = history.recyclability
-        )
-        intent.putExtra("productDetails", productDetails)
-        startActivity(intent)
     }
 
 
@@ -219,9 +205,10 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
             id = this.id,
             userId = this.userId,
             productId = this.productId,
+          //  date = LocalDateTime.parse(this.date, DateTimeFormatter.ISO_DATE_TIME)
             date = this.date
         )
-    }   */
+    }  */
 
 
     // Get the product
@@ -268,6 +255,25 @@ class HistoryActivity : AppCompatActivity(),  OnListItemHistoryClick{
                 }
             })
     }  */
+
+
+
+    // STATIC
+      override fun onItemHistoryClick(history: History) {
+          val intent = Intent(this, ProductDetailsActivity::class.java)
+          val productDetails = History(
+              imageId = history.imageId,
+              name = history.name,
+              date = history.date,
+              isFavorite = history.isFavorite,
+              description = history.description,
+              carbonFootprint = history.carbonFootprint,
+              waterConsumption = history.waterConsumption,
+              recyclability = history.recyclability
+          )
+          intent.putExtra("productDetails", productDetails)
+          startActivity(intent)
+      }
 
 
 }

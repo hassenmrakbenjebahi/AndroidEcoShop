@@ -30,24 +30,25 @@ class ProductDetailsActivity : AppCompatActivity() {
         if (productDetails != null) {
             ivProductDetails.setImageResource(productDetails.imageId)
             tvNameDetails.text = productDetails.name
-            tvDescriptionDetails.text = "Description: ${productDetails.description}"
-            tvCarbonFootprint.text = "Carbon Footprint: ${productDetails.carbonFootprint}"
-            tvWaterConsumption.text = "Water Consumption: ${productDetails.waterConsumption}"
-            tvRecyclability.text = "Recyclability: ${productDetails.recyclability}"
+            tvDescriptionDetails.text = productDetails.description
+            tvCarbonFootprint.text = "${productDetails.carbonFootprint} KG"
+            tvWaterConsumption.text = "${productDetails.waterConsumption} L"
+            tvRecyclability.text = "${productDetails.recyclability} %"
         }
 
 
 
         // Dynamic : get product from intent
-      /*  val product = intent.getParcelableExtra<Product>("product")
+      /* val product = intent.getParcelableExtra<Product>("product")
         if (product != null) {
              Picasso.get().load(product.image).into(ivProductDetails)
              tvNameDetails.text = product.name
              tvDescriptionDetails.text = "Description: ${product.description}"
-             tvCarbonFootprint.text = "Carbon Footprint: ${product.carbonFootprint}"
-             tvWaterConsumption.text = "Water Consumption: ${product.waterConsumption}"
-             tvRecyclability.text = "Recyclability: ${product.recyclability}"
-        }  */
+             tvCarbonFootprint.text = "${product.carbonFootprint} KG"
+             tvWaterConsumption.text = "${product.waterConsumption} L"
+             tvRecyclability.text = "${product.recyclability} %"
+        } */
+
 
     }
 
