@@ -7,15 +7,15 @@ import tn.esprit.ecoshope.model.*
 
 interface ApiService {
 
-    @GET("/api/history/user/{userId}")
+    @GET("/historique/user/{userId}")
     fun getUserHistory(@Path("userId") userId: String): Call<Response<List<UserHistory>>>
 
-    @DELETE("/api/history/{historyId}")
+    @DELETE("/historique/{historyId}")
     fun deleteFromHistory(@Path("historyId") historyId: String): Call<Void>
 
-    @GET("/api/history/product/{productId}")
+    @GET("/historique/product/{productId}")
     fun getProductDetails(@Path("productId") productId: String): Call<Product>
 
-    @POST("/api/history/add")
+    @POST("/historique/add")
     fun addToHistory(@Body request: AddToHistoryRequest): Call<History>
 }
